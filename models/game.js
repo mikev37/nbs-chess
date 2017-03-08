@@ -3,8 +3,7 @@ var mongoose = require('mongoose');
 
 var Game = mongoose.Schema({
     name        : String,
-    email       : String,
-    password    : String,
+    winner      : String,
     white_player : String,
     black_player : String,
     is_white : Boolean,
@@ -25,9 +24,11 @@ var Game = mongoose.Schema({
             }
         ]
     ],
+    selected : String,
+    last_action_date : Date,
+    last_action : String,
     white_captured : [{name:String}],
     black_captured : [{name:String}],
-    last_action : Date,
     start_date : Date,
     end_date : Date
 });

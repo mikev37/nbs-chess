@@ -795,4 +795,4 @@ const board = [
 ];
 
 
-export default board;
+exports.board = board;
