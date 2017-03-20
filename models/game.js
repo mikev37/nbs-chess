@@ -24,7 +24,11 @@ var Game = mongoose.Schema({
             }
         ]
     ],
-    selected : String,
+    selected : {
+        x   : Number,
+        y   : Number,
+        piece:String
+    },
     last_action_date : Date,
     last_action : String,
     white_captured : [{name:String}],

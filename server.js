@@ -216,16 +216,40 @@ app.get('/user/games', function (req, res) {
             usr = usr.toObject();
             for (var i = 0; i < usr.games.length; i++){
                 var game_id_obj = usr.games[i];
-                Game.findOne({'_id':game_id_obj.game_id},function(err, gam) {
-                    if(err!=null){
-                        responce.push({
-                            name:"Error"
-                        });
-                    }
-                    else responce.push(gam);
-                });
+                console.log("user games game obj: "+game_id_obj);
+                responce.push(
+                    Game.findOne({'_id':game_id_obj.game_id},
+                        function(err,gam){
+                            if(err==null){
+                                console.log(gam._id);
+                                console.log(gam);
+                                return gam;
+                            }
+                            else return err;
+                        }
+                    ).exec()
+                );
             }
-            res.send(responce);
+            // console.log(" ");
+            // console.log(responce);
+            // console.log("_____________________");
+            Promise.all(responce).then(function(){
+                    console.log("Sending");
+                    responce = responce.map(function(f){return f.emitted.fulfill[0];});
+                    res.send(responce);
+                });
+            // responce = responce.map(function(f){f.resolve()}).then(
+            //     function(){
+            //         console.log("Sending");
+            //         res.send(responce);
+            //     });
+            // console.log(" ");
+            // console.log(responce);
+            // console.log("_____________________");
+            
+            
+            
+
         }
     });
 });
@@ -252,6 +276,13 @@ app.get('/game', function (req, res) {
    
 });
 
+function hasGameID(game_id) {
+    game_id = game_id.toString();
+    return function(element) {
+        return element.game_id === game_id;
+    }
+}
+
 /**
 In
    Game
@@ -263,7 +294,7 @@ Out
 app.get('/game/join', function (req, res) {
     var user_id = req.body.user_id,
         game_id = req.body.game_id,
-        is_white = req.body.is_white;
+        is_white = req.body.is_white.toLowerCase() == "true";
 
     Game.findOne({ _id : game_id }, function(err,gam){
         if(err != null){
@@ -285,7 +316,7 @@ app.get('/game/join', function (req, res) {
                         if(gam.white_player === null){
                             gam.white_player = usr._id;
                             gam.save();
-                            if(usr.games.indexOf({'game_id':game_id}) === -1)
+                            if(usr.games.find(hasGameID(gam._id))===null)
                             {
                                 usr.games.push({'game_id':game_id});
                                 usr.save();
@@ -300,7 +331,7 @@ app.get('/game/join', function (req, res) {
                         if(gam.black_player === null){
                             gam.black_player = usr._id;
                             gam.save();
-                            if(usr.games.indexOf({'game_id':game_id}) === -1)
+                            if(usr.games.find(hasGameID(gam._id))===null)
                             {
                                 usr.games.push({'game_id':game_id});
                                 usr.save();
@@ -317,6 +348,63 @@ app.get('/game/join', function (req, res) {
     });
 });
 
+/**
+In
+   User, Game, x and y
+Out
+    Create a new game, assign the user to the game and such.
+*/
+app.put('/game/play', function (req, res) {
+    var game_id = req.body.game_id,
+        user_id = req.body.user_id,
+        x = req.body.x,
+        y = req.body.y;
+        
+    //find if user is even in the game
+    User.findOne({ _id : user_id }, function(err,usr){
+        if(err!==null){
+            res.status(500).send(err);
+        }
+        else if(usr === null)
+        {
+            res.status(404).send("Could not find such a user");
+        }
+        else Game.findOne({ _id : game_id }, function(err, gam) {
+            if(err!==null){
+                res.status(500).send(err);
+            }
+            else if(gam === null)
+            {
+                res.status(404).send("Could not find such a game");
+            }
+            else {
+                
+                if(usr._id == gam.white_player || usr._id == gam.black_player){
+                    
+                    //find if user is the current turn
+                    var white_usr = usr._id == gam.white_player && gam.is_white;
+                    var black_usr = usr._id == gam.black_player && gam.is_black;
+                    if(white_usr || black_usr){
+                        //if(){
+                            //if the piece is one of his own, make it the selected piece
+                    
+                            //if the piece is empty or enemy, check if the selected piece can move there
+                            
+                            //make the move
+                        //}
+                        res.send(gam);
+                    }
+                    else {
+                        res.status(432).send("It is not your turn");
+                    }
+                }
+                else{
+                    res.status(423).send("User is not in the game");
+                }
+            }
+        });
+    });
+});
 
 
 /**
@@ -388,9 +476,14 @@ app.delete('/game', function (req, res) {
         }
         else if(usr != null)
         {
-            if(usr.games.indexOf({'game_id':game_id}) === -1)
+            var usr_data = usr.toObject();
+            console.log(usr_data);
+            console.log(game_id);
+            if(usr_data.games.find(function(element){
+                return element.game_id === game_id;
+            }) == null)
             {
-                res.status(423).send("user is not part of the game");   
+                res.status(423).send("user does not have refrence to the game");   
             }
             else{
                 Game.findOne({_id : game_id},function(err, gam) {
@@ -399,8 +492,13 @@ app.delete('/game', function (req, res) {
                         res.status(500).send(err);   
                     }
                     else if(gam != null){
-                        
-                        if(gam.white_player === usr._id)
+                        console.log("white : "+gam.white_player);
+                        console.log("black : "+gam.black_player);
+                        console.log("user : "+usr._id);
+                        var steve = String(gam.white_player) + "is "+String(usr._id)+" : "+(String(gam.white_player) === String(usr._id));
+                        console.log(steve);
+                        console.log("white ish : "+(gam.white_player === usr_data._id));
+                        if(gam.white_player == usr_data._id)
                         {
                             gam.end_date = new Date();
                             gam.winner = gam.black_player;
@@ -408,10 +506,11 @@ app.delete('/game', function (req, res) {
                             if(gam.black_player === null)
                             {
                                 usr.games.splice(usr.games.indexOf({'game-id':game_id}),1);
+                                usr.save();
                             }
                             res.send(gam);
                         }
-                        else if(gam.black_player === usr._id)
+                        else if(gam.black_player == usr._id)
                         {
                             gam.end_date = new Date();
                             gam.winner = gam.white_player;
@@ -419,11 +518,19 @@ app.delete('/game', function (req, res) {
                             if(gam.white_player === null)
                             {
                                 usr.games.splice(usr.games.indexOf({'game-id':game_id}),1);
+                                usr.save();
                             }
                             res.send(gam);
                         }
-                        else {
-                            res.status(423).send("user is not part of the game");   
+                        else if(gam.black_player === null && gam.white_player === null){
+                            gam.delete();
+                            usr.games.splice(usr.games.indexOf({'game-id':game_id}),1);
+                            usr.save();
+                            
+                            res.send(usr);
+                        }
+                        else{
+                            res.status(423).send("user is not party to the game");   
                         }
                     }
                 });   
