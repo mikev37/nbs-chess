@@ -8,7 +8,8 @@ const board = [
             "y":0,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -20,7 +21,8 @@ const board = [
             "y":0,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -32,7 +34,8 @@ const board = [
             "y":0,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -44,7 +47,8 @@ const board = [
             "y":0,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -56,7 +60,8 @@ const board = [
             "y":0,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -68,7 +73,8 @@ const board = [
             "y":0,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -80,7 +86,8 @@ const board = [
             "y":0,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -92,7 +99,8 @@ const board = [
             "y":0,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         }
@@ -108,7 +116,8 @@ const board = [
             "y":1,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -120,7 +129,8 @@ const board = [
             "y":1,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -132,7 +142,8 @@ const board = [
             "y":1,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -144,7 +155,8 @@ const board = [
             "y":1,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -156,7 +168,8 @@ const board = [
             "y":1,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -168,7 +181,8 @@ const board = [
             "y":1,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -180,7 +194,8 @@ const board = [
             "y":1,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -192,7 +207,8 @@ const board = [
             "y":1,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         }
@@ -206,7 +222,8 @@ const board = [
             "y":2,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -218,7 +235,8 @@ const board = [
             "y":2,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -230,7 +248,8 @@ const board = [
             "y":2,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -242,7 +261,8 @@ const board = [
             "y":2,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -254,7 +274,8 @@ const board = [
             "y":2,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -266,7 +287,8 @@ const board = [
             "y":2,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -278,7 +300,8 @@ const board = [
             "y":2,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -290,7 +313,8 @@ const board = [
             "y":2,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         }
@@ -306,7 +330,8 @@ const board = [
             "y":3,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -318,7 +343,8 @@ const board = [
             "y":3,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -330,7 +356,8 @@ const board = [
             "y":3,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -342,7 +369,8 @@ const board = [
             "y":3,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -354,7 +382,8 @@ const board = [
             "y":3,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -366,7 +395,8 @@ const board = [
             "y":3,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -378,7 +408,8 @@ const board = [
             "y":3,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -390,7 +421,8 @@ const board = [
             "y":3,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         }
@@ -404,7 +436,8 @@ const board = [
             "y":4,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -416,7 +449,8 @@ const board = [
             "y":4,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -428,7 +462,8 @@ const board = [
             "y":4,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -440,7 +475,8 @@ const board = [
             "y":4,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -452,7 +488,8 @@ const board = [
             "y":4,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -464,7 +501,8 @@ const board = [
             "y":4,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -476,7 +514,8 @@ const board = [
             "y":4,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -488,7 +527,8 @@ const board = [
             "y":4,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         }
@@ -504,7 +544,8 @@ const board = [
             "y":5,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -516,7 +557,8 @@ const board = [
             "y":5,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -528,7 +570,8 @@ const board = [
             "y":5,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -540,7 +583,8 @@ const board = [
             "y":5,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -552,7 +596,8 @@ const board = [
             "y":5,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -564,7 +609,8 @@ const board = [
             "y":5,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -576,7 +622,8 @@ const board = [
             "y":5,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -588,7 +635,8 @@ const board = [
             "y":5,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         }
@@ -602,7 +650,8 @@ const board = [
             "y":6,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -614,7 +663,8 @@ const board = [
             "y":6,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -626,7 +676,8 @@ const board = [
             "y":6,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -638,7 +689,8 @@ const board = [
             "y":6,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -650,7 +702,8 @@ const board = [
             "y":6,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -662,7 +715,8 @@ const board = [
             "y":6,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -674,7 +728,8 @@ const board = [
             "y":6,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -686,7 +741,8 @@ const board = [
             "y":6,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         }
@@ -701,7 +757,8 @@ const board = [
             "y":7,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -713,7 +770,8 @@ const board = [
             "y":7,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -725,7 +783,8 @@ const board = [
             "y":7,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -737,7 +796,8 @@ const board = [
             "y":7,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -749,7 +809,8 @@ const board = [
             "y":7,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -761,7 +822,8 @@ const board = [
             "y":7,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -773,7 +835,8 @@ const board = [
             "y":7,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         },
@@ -785,7 +848,8 @@ const board = [
             "y":7,
             "selected":false,//whether the current node is selected
             "moveable":false,//whether the current node is an option to move to
-            "attack_able":false, //whether the current node is an option to attack
+            "attack_able":false,
+			"passanted":false, //whether the current node is an option to attack
             "threatened":0, //how many enemy pieces can attack here
             "supported":0 //how many friendly pieces can attack here
         }

@@ -6,6 +6,8 @@ var Game = mongoose.Schema({
     winner      : String,
     white_player : String,
     black_player : String,
+    check_black : Boolean,
+    check_white : Boolean,
     is_white : Boolean,
     turn_num : Number,
     board_state : [
@@ -19,8 +21,9 @@ var Game = mongoose.Schema({
                 selected:   Boolean,
                 movable :   Boolean,
                 attack_able:Boolean,
-                threatened :Boolean,
-                supported  :Boolean
+                passanted:  Boolean,
+                threatened :Number,
+                supported  :Number
             }
         ]
     ],
