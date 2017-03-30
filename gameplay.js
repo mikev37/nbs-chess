@@ -12,29 +12,30 @@ var play = function(game_state,x,y){
     
     var tile = n_state.board_state[x][y];
     
+    console.log("WE're in play");
+    
     if(tile.piece == 'Empty')
     {
-        if(tile.movable)
-        {
-            //Move piece
-        }
-        else if(tile.attack_able){
-            //Take piece
-        }
+        
+        console.log("making moves");
+        n_state = make_move(n_state,x,y);
+        clear_board(n_state.board_state,n_state.selected);
+        end_turn(n_state);
     }
     else
     {
         if((tile.owner === 'White' && game_state.is_white)||(tile.owner === 'Black' && !game_state.is_white))
         {
+            console.log("Selecting unity");
+            clear_board(n_state.board_state,n_state.selected);
             n_state.selected.piece = tile.piece;
             n_state.selected.x = tile.x;
             n_state.selected.y = tile.y;
             tile.selected = true;
-            
-            clear_board(n_state.board_state);
             //Find the movable and attackable pieces
             if(n_state.selected.piece === 'Pawn')
             {
+                console.log("moving pawn");
                 //pawns are little pieces of dung
                 if(tile.owner === 'White')
                 {
@@ -148,24 +149,24 @@ var play = function(game_state,x,y){
             
         }
     }
-    
+    n_state.save();
     return n_state;
 }
 
 /**
  * Removes all current selected movable, passantable and attackable 
  */
-var clear_board = function(board_state){
+var clear_board_threat = function(board_state){
     for(var i = 0; i < board_state.length; i++)
     {
         for(var j = 0; j < board_state.length; j++)
         {
-            board_state[i][j].selected = false;
-            board_state[i][j].attack_able = false;
-            board_state[i][j].movable = false;
-            board_state[i][j].passanted = false;
+            board_state[i][j].threat_white = 0;
+            board_state[i][j].threat_black = 0;
         }
     }
+    
+    return board_state;
 }
 
 
@@ -183,9 +184,11 @@ var clear_board = function(board_state,selected){
             board_state[i][j].passanted = false;
         }
     }
-    selected.piece = 'Empty';
-    selected.x = -1;
-    selected.y = -1;
+    if(selected!=null){
+        selected.piece = 'Empty';
+        selected.x = -1;
+        selected.y = -1;
+    }
 }
 /**
  * Calculates the threatened and supported tiles
@@ -200,16 +203,206 @@ var calc_threat = function(board_state){
             {
                 if(tile.piece === 'Pawn')
                 {
-                    
+                    //pawns are little pieces of dung
+                    if(tile.owner === 'White')
+                    {
+                        if(tile.x > 0)
+                        {
+                            if(board_state[tile.x-1][tile.y-1].owner === 'Black')
+                            {
+                                board_state[tile.x-1][tile.y-1].threat_white++;
+                            }
+                            else if(tile.y-1 === 2 && board_state[tile.x-1][tile.y-1].passanted)
+                            {
+                                board_state[tile.x-1][tile.y-1].threat_white++;
+                            }
+                        }
+                        if(tile.x <= 8)
+                        {
+                            if(board_state[tile.x+1][tile.y-1].owner === 'Black')
+                            {
+                                board_state[tile.x+1][tile.y-1].threat_white++;
+                            }
+                            else if(tile.y-1 === 2 && board_state[tile.x+1][tile.y-1].passanted)
+                            {
+                                board_state[tile.x+1][tile.y-1].threat_white++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(tile.x > 0)
+                        {
+                            if(board_state[tile.x-1][tile.y+1].owner === 'White')
+                            {
+                                board_state[tile.x-1][tile.y+1].threat_black++;
+                            }
+                            else if(tile.y+1 === 5 && board_state[tile.x-1][tile.y+1].passanted)
+                            {
+                                board_state[tile.x-1][tile.y+1].threat_black++;
+                            }
+                        }
+                        if(tile.x <= 8)
+                        {
+                            if(board_state[tile.x+1][tile.y+1].owner === 'White')
+                            {
+                                board_state[tile.x+1][tile.y+1].threat_black++;
+                            }
+                            else if(tile.y+1 === 5 && board_state[tile.x+1][tile.y+1].passanted)
+                            {
+                                board_state[tile.x+1][tile.y+1].threat_black++;
+                            }
+                        }
+                    }
                 }
                 else
                 {
-                    
+                    switch(tile.piece)
+                    {
+                        case 'King': 
+                            calc_threat_move(board_state,0,1,tile.x,tile.y,tile.piece,1);
+                            calc_threat_move(board_state,0,-1,tile.x,tile.y,tile.piece,1);
+                            calc_threat_move(board_state,1,0,tile.x,tile.y,tile.piece,1);
+                            calc_threat_move(board_state,-1,0,tile.x,tile.y,tile.piece,1);
+                            calc_threat_move(board_state,1,-1,tile.x,tile.y,tile.piece,1);
+                            calc_threat_move(board_state,1,1,tile.x,tile.y,tile.piece,1);
+                            calc_threat_move(board_state,-1,-1,tile.x,tile.y,tile.piece,1);
+                            calc_threat_move(board_state,-1,1,tile.x,tile.y,tile.piece,1);
+                            break;
+                        case 'Queen': 
+                            calc_threat_move(board_state,0,1,tile.x,tile.y,tile.piece,8);
+                            calc_threat_move(board_state,0,-1,tile.x,tile.y,tile.piece,8);
+                            calc_threat_move(board_state,1,0,tile.x,tile.y,tile.piece,8);
+                            calc_threat_move(board_state,-1,0,tile.x,tile.y,tile.piece,8);
+                            calc_threat_move(board_state,1,-1,tile.x,tile.y,tile.piece,8);
+                            calc_threat_move(board_state,1,1,tile.x,tile.y,tile.piece,8);
+                            calc_threat_move(board_state,-1,-1,tile.x,tile.y,tile.piece,8);
+                            calc_threat_move(board_state,-1,1,tile.x,tile.y,tile.piece,8);
+                            break;
+                        case 'Rook':
+                            calc_threat_move(board_state,0,1,tile.x,tile.y,tile.piece,8);
+                            calc_threat_move(board_state,0,-1,tile.x,tile.y,tile.piece,8);
+                            calc_threat_move(board_state,1,0,tile.x,tile.y,tile.piece,8);
+                            calc_threat_move(board_state,-1,0,tile.x,tile.y,tile.piece,8);
+                            break;
+                            
+                        case 'Knight':
+                            calc_threat_move(board_state,2,1,tile.x,tile.y,tile.piece,1);
+                            calc_threat_move(board_state,2,-1,tile.x,tile.y,tile.piece,1);
+                            calc_threat_move(board_state,1,2,tile.x,tile.y,tile.piece,1);
+                            calc_threat_move(board_state,-1,2,tile.x,tile.y,tile.piece,1);
+                            calc_threat_move(board_state,1,-2,tile.x,tile.y,tile.piece,1);
+                            calc_threat_move(board_state,-1,-2,tile.x,tile.y,tile.piece,1);
+                            calc_threat_move(board_state,-2,-1,tile.x,tile.y,tile.piece,1);
+                            calc_threat_move(board_state,-2,1,tile.x,tile.y,tile.piece,1);
+                            break;
+                            
+                        case 'Bishop':
+                            calc_threat_move(board_state,1,-1,tile.x,tile.y,tile.piece,8);
+                            calc_threat_move(board_state,1,1,tile.x,tile.y,tile.piece,8);
+                            calc_threat_move(board_state,-1,-1,tile.x,tile.y,tile.piece,8);
+                            calc_threat_move(board_state,-1,1,tile.x,tile.y,tile.piece,8);
+                            break;
+                    }
                 }
             }
         }
     }
 }
+
+var move_piece = function(game_state,nx,ny){
+        var selected = game_state.selected;
+        var orgin_tile = game_state.board_state[selected.x][selected.y];
+        var tile = game_state.board_state[nx][ny];
+        if(tile.movable)
+        {
+            //Move piece
+            tile.piece = selected.piece;
+            tile.owner = orgin_tile.owner;
+            
+            orgin_tile.owner = "None";
+            orgin_tile.piece = "Empty";
+        }
+        else if(tile.attack_able){
+            //Take piece
+            if(game_state.is_white){
+                var capture = {};
+                capture.name = tile.piece;
+                game_state.white_captured.push(capture);
+            }
+            else{
+                var capture = {};
+                capture.name = tile.piece;
+                game_state.black_captured.push(capture);
+            }
+            tile.piece = selected.piece;
+            tile.owner = orgin_tile.owner;
+            orgin_tile.owner = "None";
+            orgin_tile.piece = "Empty";
+        }
+        clear_board(game_state.board_state,game_state.selected);
+}
+
+var king_threat = function(game_state,is_white){
+    var board_state = game_state.board_state;
+    for(var i = 0; i < board_state.length; i++)
+    {
+        for(var j = 0; j < board_state.length; j++)
+        {
+            if(is_white && board_state[i][j].piece === "King" && board_state[i][j].owner === "White" && board_state[i][j].threat_black > 0)
+            {
+                return true;
+            }
+            else if(!is_white && board_state[i][j].piece === "King" && board_state[i][j].owner === "Black" && board_state[i][j].threat_white > 0){
+                return true;
+            }
+        }
+    }
+    
+    return false;
+}
+
+/**
+ Check if this move is valid with the kings and such.
+*/
+var make_move = function(game_state, nx,ny){
+    var copy_board = JSON.parse(JSON.stringify(game_state));
+    //clear the threat
+    copy_board.board_state = clear_board_threat(copy_board.board_state);
+    //find if the king is under threat after the move
+    clear_board_threat(copy_board.board_state);
+    move_piece(copy_board,nx,ny);
+    calc_threat(copy_board.board_state);
+    //reject the move if so.
+    if(king_threat(copy_board,copy_board.is_white)){
+        //reject turn
+        game_state.error_message = "King would remain in check!";
+        return game_state;
+    }
+    //Otherwise perform the move
+    else{
+        game_state.error_message = "";
+        clear_board_threat(game_state.board_state);
+        move_piece(game_state,nx,ny);
+        calc_threat(game_state.board_state);
+        game_state.check_black = king_threat(game_state,false);
+        game_state.check_white = king_threat(game_state,true);
+    }
+    return game_state
+    //
+   
+}
+
+/**End turn
+ * 
+ * TODO Find behavior to see if the game is over
+ * 
+ */
+var end_turn = function(game_state){
+    game_state.is_white = !game_state.is_white;
+
+    return game_state;
+} 
 
 /**
  * Calculates the threatened and supported tiles
@@ -220,6 +413,7 @@ var calc_threat_move = function(board_state,dx,dy,x,y,selected,repeat){
     {
         var n_tile = board_state[x+dx][y+dy];
         if(n_tile.owner === "None"){
+            
             n_tile.threatened++;
             if(repeat > 1)
             {
@@ -229,7 +423,12 @@ var calc_threat_move = function(board_state,dx,dy,x,y,selected,repeat){
         else{
             if(n_tile.owner !== tile.owner)
             {
-                n_tile.threatened++;
+                if(tile.owner === "White"){
+                    n_tile.threat_white++;
+                }
+                else{
+                    n_tile.threat_black++;
+                }
             }
         }
     }
@@ -248,29 +447,31 @@ var calc_threat_move = function(board_state,dx,dy,x,y,selected,repeat){
  * 
  * repeat - whether this move is propagated outwards
  * 
- * 
- * TODO Account for checking?
  */
 var move = function(board_state,dx,dy,x,y,selected,repeat){
     var tile = board_state[selected.x][selected.y];
+    var king_stop = (selected.piece === "King" && tile.owner === "Black" && n_tile.threat_white === 0)||(selected.piece === "King" && tile.owner === "White" && n_tile.threat_black === 0);
     if(x+dx >= 0 && x + dx < 8 && y + dy >= 0 && y + dy < 8)
     {
         var n_tile = board_state[x+dx][y+dy];
-        if(n_tile.owner === "None"){
-            n_tile.moveable = true;
-            if(repeat > 1)
-            {
+        if(king_stop||selected.piece !== "King")
+        {
+            if(n_tile.owner === "None"){
+                n_tile.moveable = true;
+                if(repeat > 1)
+                {
                 move(board_state,dx,dy,x+dx,y+dy,selected,repeat-1);
-            }
-        }
-        else{
-            if(n_tile.owner !== tile.owner)
-            {
-                n_tile.attack_able = true;
+                }
+            }        
+            else{
+                if(n_tile.owner !== tile.owner)
+                {
+                    n_tile.attack_able = true;
+                }
             }
         }
     }
 }
 
 
-export default play;
+exports.default = play;

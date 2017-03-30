@@ -22,6 +22,8 @@ var UserSchema = user_file.User;
 var game_file = require("./models/game.js");
 var GameSchema = game_file.Game;
 
+var game_play = require("./gameplay.js");
+
 var User = null;
 var Game = null;
 
@@ -348,6 +350,65 @@ app.get('/game/join', function (req, res) {
     });
 });
 
+app.get('/game/debug', function (req, res) {
+    var game_id = req.body.game_id;
+    
+    Game.findOne({ _id : game_id }, function(err, gam) {
+        if(err!==null){
+            res.status(500).send(err);
+        }
+        else if(gam === null)
+        {
+            res.status(404).send("Could not find such a game");
+        }
+        else
+        {
+            
+            var str ="\n\n";
+            str+= "--0--1--2--3--4--5--6--7-\n";
+            for(var i = 0; i < gam.board_state.length*3; i++){
+                var ix = (i/3 )|0;
+                for(var j = 0; j < gam.board_state.length*3+1; j++){
+                    var jx = ((j-1)/3)|0;
+                    if(j === 0)
+                    {
+                        if(i%3==1)
+                        {
+                            str+=String.fromCharCode(97 + ix);
+                        }
+                        else str+="-";
+                    }
+                    else if((j)%3 === 2 && i%3===1 && gam.board_state[ix][jx].piece !== "Empty"){
+                        
+                        if(gam.board_state[ix][jx].owner === "White")
+                        {
+                            str+=gam.board_state[ix][jx].piece.charAt(0);
+                        }
+                        else{
+                            str+=gam.board_state[ix][jx].piece.charAt(0).toLowerCase();
+                        }
+                    }
+                    else{
+                        if(gam.board_state[ix][jx].selected){
+                            str+="X";
+                        }
+                        else if(gam.board_state[ix][jx].tile === "Black")
+                        {
+                            str+="-";
+                        }
+                        else str+=" ";
+                    }
+                }
+                str+="\n"
+            }
+            
+            str+="\n\n";
+            res.send(str);
+        }
+    });
+    
+});
+
 /**
 In
    User, Game, x and y
@@ -385,13 +446,7 @@ app.put('/game/play', function (req, res) {
                     var white_usr = usr._id == gam.white_player && gam.is_white;
                     var black_usr = usr._id == gam.black_player && gam.is_black;
                     if(white_usr || black_usr){
-                        //if(){
-                            //if the piece is one of his own, make it the selected piece
-                    
-                            //if the piece is empty or enemy, check if the selected piece can move there
-                            
-                            //make the move
-                        //}
+                        game_play.default(gam,x,y).save();
                         res.send(gam);
                     }
                     else {

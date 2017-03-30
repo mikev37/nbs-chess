@@ -22,8 +22,8 @@ var Game = mongoose.Schema({
                 movable :   Boolean,
                 attack_able:Boolean,
                 passanted:  Boolean,
-                threatened :Number,
-                supported  :Number
+                threat_white : Number,
+                threat_black  :Number
             }
         ]
     ],
@@ -37,7 +37,8 @@ var Game = mongoose.Schema({
     white_captured : [{name:String}],
     black_captured : [{name:String}],
     start_date : Date,
-    end_date : Date
+    end_date : Date,
+    error_message : String
 });
 
 Game.methods.is_Over = function (){
