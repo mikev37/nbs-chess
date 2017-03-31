@@ -7,152 +7,160 @@
  * Out
  *  new board state
  */
-var play = function(game_state,x,y){
-    var n_state = game_state;
+var promise = new Promise(function(){
     
-    var tile = n_state.board_state[x][y];
-    
-    console.log("WE're in play");
-    
-    if(tile.piece == 'Empty')
-    {
+});
+ 
+var play = 
+    function(game_state,x,y){
+        var n_state = game_state;
         
-        console.log("making moves");
-        n_state = make_move(n_state,x,y);
-        clear_board(n_state.board_state,n_state.selected);
-        end_turn(n_state);
-    }
-    else
-    {
-        if((tile.owner === 'White' && game_state.is_white)||(tile.owner === 'Black' && !game_state.is_white))
+        var tile = n_state.board_state[x][y];
+        
+        console.log("WE're in play");
+        
+        if(tile.piece == 'Empty')
         {
-            console.log("Selecting unity");
+            
+            console.log("making moves");
+            n_state = make_move(n_state,x,y);
             clear_board(n_state.board_state,n_state.selected);
-            n_state.selected.piece = tile.piece;
-            n_state.selected.x = tile.x;
-            n_state.selected.y = tile.y;
-            tile.selected = true;
-            //Find the movable and attackable pieces
-            if(n_state.selected.piece === 'Pawn')
+            end_turn(n_state);
+        }
+        else
+        {
+            if((tile.owner === 'White' && game_state.is_white)||(tile.owner === 'Black' && !game_state.is_white))
             {
-                console.log("moving pawn");
-                //pawns are little pieces of dung
-                if(tile.owner === 'White')
+                console.log("Selecting unity");
+                clear_board(n_state.board_state,n_state.selected);
+                n_state.selected.piece = tile.piece;
+                n_state.selected.x = tile.x;
+                n_state.selected.y = tile.y;
+                tile.selected = true;
+                //Find the movable and attackable pieces
+                if(n_state.selected.piece === 'Pawn')
                 {
-                    if(n_state.board_state[tile.x][tile.y-1].owner === 'None')
+                    console.log("moving pawn");
+                    //pawns are little pieces of dung
+                    if(tile.owner === 'White')
                     {
-                        n_state.board_state[tile.x][tile.y-1].movable = true;
+                        if(n_state.board_state[tile.x][tile.y-1].owner === 'None')
+                        {
+                            n_state.board_state[tile.x][tile.y-1].movable = true;
+                        }
+                        if(tile.x > 0)
+                        {
+                            if(n_state.board_state[tile.x-1][tile.y-1].owner === 'Black')
+                            {
+                                n_state.board_state[tile.x-1][tile.y-1].attack_able = true;
+                            }
+                            else if(tile.y-1 === 2 && n_state.board_state[tile.x-1][tile.y-1].passanted)
+                            {
+                                n_state.board_state[tile.x-1][tile.y-1].attack_able = true;
+                            }
+                        }
+                        if(tile.x <= 8)
+                        {
+                            if(n_state.board_state[tile.x+1][tile.y-1].owner === 'Black')
+                            {
+                                n_state.board_state[tile.x+1][tile.y-1].attack_able = true;
+                            }
+                            else if(tile.y-1 === 2 && n_state.board_state[tile.x+1][tile.y-1].passanted)
+                            {
+                                n_state.board_state[tile.x+1][tile.y-1].attack_able = true;
+                            }
+                        }
                     }
-                    if(tile.x > 0)
+                    else
                     {
-                        if(n_state.board_state[tile.x-1][tile.y-1].owner === 'Black')
+                        if(n_state.board_state[tile.x][tile.y+1].owner === 'None')
                         {
-                            n_state.board_state[tile.x-1][tile.y-1].attack_able = true;
+                            n_state.board_state[tile.x][tile.y+1].movable = true;
                         }
-                        else if(tile.y-1 === 2 && n_state.board_state[tile.x-1][tile.y-1].passanted)
+                        if(tile.x > 0)
                         {
-                            n_state.board_state[tile.x-1][tile.y-1].attack_able = true;
+                            if(n_state.board_state[tile.x-1][tile.y+1].owner === 'White')
+                            {
+                                n_state.board_state[tile.x-1][tile.y+1].attack_able = true;
+                            }
+                            else if(tile.y+1 === 5 && n_state.board_state[tile.x-1][tile.y+1].passanted)
+                            {
+                                n_state.board_state[tile.x-1][tile.y+1].attack_able = true;
+                            }
                         }
-                    }
-                    if(tile.x <= 8)
-                    {
-                        if(n_state.board_state[tile.x+1][tile.y-1].owner === 'Black')
+                        if(tile.x <= 8)
                         {
-                            n_state.board_state[tile.x+1][tile.y-1].attack_able = true;
-                        }
-                        else if(tile.y-1 === 2 && n_state.board_state[tile.x+1][tile.y-1].passanted)
-                        {
-                            n_state.board_state[tile.x+1][tile.y-1].attack_able = true;
+                            if(n_state.board_state[tile.x+1][tile.y+1].owner === 'White')
+                            {
+                                n_state.board_state[tile.x+1][tile.y+1].attack_able = true;
+                            }
+                            else if(tile.y+1 === 5 && n_state.board_state[tile.x+1][tile.y+1].passanted)
+                            {
+                                n_state.board_state[tile.x+1][tile.y+1].attack_able = true;
+                            }
                         }
                     }
                 }
                 else
                 {
-                    if(n_state.board_state[tile.x][tile.y+1].owner === 'None')
+                    console.log("selecting not pawn")
+                    switch(tile.piece)
                     {
-                        n_state.board_state[tile.x][tile.y+1].movable = true;
+                        case 'King': 
+                            move(n_state.board_state,0,1,tile.x,tile.y,n_state.selected,1);
+                            move(n_state.board_state,0,-1,tile.x,tile.y,n_state.selected,1);
+                            move(n_state.board_state,1,0,tile.x,tile.y,n_state.selected,1);
+                            move(n_state.board_state,-1,0,tile.x,tile.y,n_state.selected,1);
+                            move(n_state.board_state,1,-1,tile.x,tile.y,n_state.selected,1);
+                            move(n_state.board_state,1,1,tile.x,tile.y,n_state.selected,1);
+                            move(n_state.board_state,-1,-1,tile.x,tile.y,n_state.selected,1);
+                            move(n_state.board_state,-1,1,tile.x,tile.y,n_state.selected,1);
+                            break;
+                        case 'Queen': 
+                            move(n_state.board_state,0,1,tile.x,tile.y,n_state.selected,8);
+                            move(n_state.board_state,0,-1,tile.x,tile.y,n_state.selected,8);
+                            move(n_state.board_state,1,0,tile.x,tile.y,n_state.selected,8);
+                            move(n_state.board_state,-1,0,tile.x,tile.y,n_state.selected,8);
+                            move(n_state.board_state,1,-1,tile.x,tile.y,n_state.selected,8);
+                            move(n_state.board_state,1,1,tile.x,tile.y,n_state.selected,8);
+                            move(n_state.board_state,-1,-1,tile.x,tile.y,n_state.selected,8);
+                            move(n_state.board_state,-1,1,tile.x,tile.y,n_state.selected,8);
+                            break;
+                        case 'Rook':
+                            move(n_state.board_state,0,1,tile.x,tile.y,n_state.selected,8);
+                            move(n_state.board_state,0,-1,tile.x,tile.y,n_state.selected,8);
+                            move(n_state.board_state,1,0,tile.x,tile.y,n_state.selected,8);
+                            move(n_state.board_state,-1,0,tile.x,tile.y,n_state.selected,8);
+                            break;
+                            
+                        case 'Knight':
+                            move(n_state.board_state,2,1,tile.x,tile.y,n_state.selected,1);
+                            move(n_state.board_state,2,-1,tile.x,tile.y,n_state.selected,1);
+                            move(n_state.board_state,1,2,tile.x,tile.y,n_state.selected,1);
+                            move(n_state.board_state,-1,2,tile.x,tile.y,n_state.selected,1);
+                            move(n_state.board_state,1,-2,tile.x,tile.y,n_state.selected,1);
+                            move(n_state.board_state,-1,-2,tile.x,tile.y,n_state.selected,1);
+                            move(n_state.board_state,-2,-1,tile.x,tile.y,n_state.selected,1);
+                            move(n_state.board_state,-2,1,tile.x,tile.y,n_state.selected,1);
+                            break;
+                            
+                        case 'Bishop':
+                            move(n_state.board_state,1,-1,tile.x,tile.y,n_state.selected,8);
+                            move(n_state.board_state,1,1,tile.x,tile.y,n_state.selected,8);
+                            move(n_state.board_state,-1,-1,tile.x,tile.y,n_state.selected,8);
+                            move(n_state.board_state,-1,1,tile.x,tile.y,n_state.selected,8);
+                            break;
                     }
-                    if(tile.x > 0)
-                    {
-                        if(n_state.board_state[tile.x-1][tile.y+1].owner === 'White')
-                        {
-                            n_state.board_state[tile.x-1][tile.y+1].attack_able = true;
-                        }
-                        else if(tile.y+1 === 5 && n_state.board_state[tile.x-1][tile.y+1].passanted)
-                        {
-                            n_state.board_state[tile.x-1][tile.y+1].attack_able = true;
-                        }
-                    }
-                    if(tile.x <= 8)
-                    {
-                        if(n_state.board_state[tile.x+1][tile.y+1].owner === 'White')
-                        {
-                            n_state.board_state[tile.x+1][tile.y+1].attack_able = true;
-                        }
-                        else if(tile.y+1 === 5 && n_state.board_state[tile.x+1][tile.y+1].passanted)
-                        {
-                            n_state.board_state[tile.x+1][tile.y+1].attack_able = true;
-                        }
-                    }
+                    console.log("Not pawn selected");
                 }
+                
             }
-            else
-            {
-                switch(tile.piece)
-                {
-                    case 'King': 
-                        move(n_state.board_state,0,1,tile.x,tile.y,n_state.selected,1);
-                        move(n_state.board_state,0,-1,tile.x,tile.y,n_state.selected,1);
-                        move(n_state.board_state,1,0,tile.x,tile.y,n_state.selected,1);
-                        move(n_state.board_state,-1,0,tile.x,tile.y,n_state.selected,1);
-                        move(n_state.board_state,1,-1,tile.x,tile.y,n_state.selected,1);
-                        move(n_state.board_state,1,1,tile.x,tile.y,n_state.selected,1);
-                        move(n_state.board_state,-1,-1,tile.x,tile.y,n_state.selected,1);
-                        move(n_state.board_state,-1,1,tile.x,tile.y,n_state.selected,1);
-                        break;
-                    case 'Queen': 
-                        move(n_state.board_state,0,1,tile.x,tile.y,n_state.selected,8);
-                        move(n_state.board_state,0,-1,tile.x,tile.y,n_state.selected,8);
-                        move(n_state.board_state,1,0,tile.x,tile.y,n_state.selected,8);
-                        move(n_state.board_state,-1,0,tile.x,tile.y,n_state.selected,8);
-                        move(n_state.board_state,1,-1,tile.x,tile.y,n_state.selected,8);
-                        move(n_state.board_state,1,1,tile.x,tile.y,n_state.selected,8);
-                        move(n_state.board_state,-1,-1,tile.x,tile.y,n_state.selected,8);
-                        move(n_state.board_state,-1,1,tile.x,tile.y,n_state.selected,8);
-                        break;
-                    case 'Rook':
-                        move(n_state.board_state,0,1,tile.x,tile.y,n_state.selected,8);
-                        move(n_state.board_state,0,-1,tile.x,tile.y,n_state.selected,8);
-                        move(n_state.board_state,1,0,tile.x,tile.y,n_state.selected,8);
-                        move(n_state.board_state,-1,0,tile.x,tile.y,n_state.selected,8);
-                        break;
-                        
-                    case 'Knight':
-                        move(n_state.board_state,2,1,tile.x,tile.y,n_state.selected,1);
-                        move(n_state.board_state,2,-1,tile.x,tile.y,n_state.selected,1);
-                        move(n_state.board_state,1,2,tile.x,tile.y,n_state.selected,1);
-                        move(n_state.board_state,-1,2,tile.x,tile.y,n_state.selected,1);
-                        move(n_state.board_state,1,-2,tile.x,tile.y,n_state.selected,1);
-                        move(n_state.board_state,-1,-2,tile.x,tile.y,n_state.selected,1);
-                        move(n_state.board_state,-2,-1,tile.x,tile.y,n_state.selected,1);
-                        move(n_state.board_state,-2,1,tile.x,tile.y,n_state.selected,1);
-                        break;
-                        
-                    case 'Bishop':
-                        move(n_state.board_state,1,-1,tile.x,tile.y,n_state.selected,8);
-                        move(n_state.board_state,1,1,tile.x,tile.y,n_state.selected,8);
-                        move(n_state.board_state,-1,-1,tile.x,tile.y,n_state.selected,8);
-                        move(n_state.board_state,-1,1,tile.x,tile.y,n_state.selected,8);
-                        break;
-                }
-            }
-            
         }
+        
+        console.log("return gamestate");
+        return n_state;
     }
-    n_state.save();
-    return n_state;
-}
-
+    
 /**
  * Removes all current selected movable, passantable and attackable 
  */

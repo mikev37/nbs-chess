@@ -10,7 +10,7 @@ var express = require('express');
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/mydb');
-
+mongoose.Promise = require('bluebird');
 
 var init_board = require("./board.js");
 
@@ -431,23 +431,55 @@ app.put('/game/play', function (req, res) {
             res.status(404).send("Could not find such a user");
         }
         else Game.findOne({ _id : game_id }, function(err, gam) {
+            console.log("WWWWWW");
             if(err!==null){
+                console.log("MMMM");
                 res.status(500).send(err);
             }
             else if(gam === null)
             {
+                console.log("asdsd");
                 res.status(404).send("Could not find such a game");
             }
             else {
-                
+                console.log("RREEEEEE");
                 if(usr._id == gam.white_player || usr._id == gam.black_player){
-                    
+                    console.log("WBCJHEK");
                     //find if user is the current turn
                     var white_usr = usr._id == gam.white_player && gam.is_white;
                     var black_usr = usr._id == gam.black_player && gam.is_black;
                     if(white_usr || black_usr){
-                        game_play.default(gam,x,y).save();
-                        res.send(gam);
+                        // console.log("GAME "+gam);
+                        game_play.default(gam,x,y,function(){
+                            console.log("CAllbac?");
+                        });
+                        console.log("______________________________");
+                        // console.log("GAME "+gam);
+                        // console.log(gam.save());
+                        
+                        console.log("VALID? :"+mongoose.Types.ObjectId.isValid(gam._id));
+                        //gam.board_state[x][y].selected = true;
+                        //gam.save();
+                        Game.findOneAndUpdate({ _id : game_id }, gam, {upsert:false}, function(err, doc){
+                            if (err) return res.send(500, { error: err });
+                            return res.send("succesfully saved");
+                        });
+                                                
+                        // db.collection.update(
+                        //   { "_id": gam._id },
+                        //   { "$set": { "board_state": gam.board_state } }
+                        // )
+                        
+                        // gam.save().then(function(done,err){
+                        //     if(err!=null)
+                        //         res.send(err);
+                        //     if(done!=null)
+                        //         res.send(done);
+                        //     console.log("_*_*_*_*_*_");
+                        //     res.send(gam);
+                        // });
+                        
+                        // res.send(gam);
                     }
                     else {
                         res.status(432).send("It is not your turn");
