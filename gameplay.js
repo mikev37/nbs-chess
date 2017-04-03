@@ -19,10 +19,11 @@ var play =
         
         console.log("WE're in play");
         
-        if(tile.piece == 'Empty')
+        if(tile.piece == 'Empty' || tile.attack_able)
         {
             
             console.log("making moves");
+            if(game_state.selected === null || game_state.selected.x === -1) return game_state;
             n_state = make_move(n_state,x,y);
             clear_board(n_state.board_state,n_state.selected);
             end_turn(n_state);
@@ -37,66 +38,66 @@ var play =
                 n_state.selected.x = tile.x;
                 n_state.selected.y = tile.y;
                 tile.selected = true;
-                //Find the movable and attackable pieces
+                //Find the moveable and attackable pieces
                 if(n_state.selected.piece === 'Pawn')
                 {
                     console.log("moving pawn");
                     //pawns are little pieces of dung
-                    if(tile.owner === 'White')
+                    if(tile.owner === 'Black')
                     {
-                        if(n_state.board_state[tile.x][tile.y-1].owner === 'None')
+                        if(n_state.board_state[tile.y-1][tile.x].owner === 'None')
                         {
-                            n_state.board_state[tile.x][tile.y-1].movable = true;
+                            n_state.board_state[tile.y-1][tile.x].moveable = true;
                         }
                         if(tile.x > 0)
                         {
-                            if(n_state.board_state[tile.x-1][tile.y-1].owner === 'Black')
+                            if(n_state.board_state[tile.y-1][tile.x-1].owner === 'White')
                             {
-                                n_state.board_state[tile.x-1][tile.y-1].attack_able = true;
+                                n_state.board_state[tile.y-1][tile.x-1].attack_able = true;
                             }
-                            else if(tile.y-1 === 2 && n_state.board_state[tile.x-1][tile.y-1].passanted)
+                            else if(tile.y-1 === 2 && n_state.board_state[tile.y-1][tile.x-1].passanted)
                             {
-                                n_state.board_state[tile.x-1][tile.y-1].attack_able = true;
+                                n_state.board_state[tile.y-1][tile.x-1].attack_able = true;
                             }
                         }
-                        if(tile.x <= 8)
+                        if(tile.x < 7)
                         {
-                            if(n_state.board_state[tile.x+1][tile.y-1].owner === 'Black')
+                            if(n_state.board_state[tile.y-1][tile.x+1].owner === 'White')
                             {
-                                n_state.board_state[tile.x+1][tile.y-1].attack_able = true;
+                                n_state.board_state[tile.y-1][tile.x+1].attack_able = true;
                             }
-                            else if(tile.y-1 === 2 && n_state.board_state[tile.x+1][tile.y-1].passanted)
+                            else if(tile.y-1 === 2 && n_state.board_state[tile.y-1][tile.x+1].passanted)
                             {
-                                n_state.board_state[tile.x+1][tile.y-1].attack_able = true;
+                                n_state.board_state[tile.y-1][tile.x+1].attack_able = true;
                             }
                         }
                     }
                     else
                     {
-                        if(n_state.board_state[tile.x][tile.y+1].owner === 'None')
+                        if(n_state.board_state[tile.y+1][tile.x].owner === 'None')
                         {
-                            n_state.board_state[tile.x][tile.y+1].movable = true;
+                            n_state.board_state[tile.y+1][tile.x].moveable = true;
                         }
                         if(tile.x > 0)
                         {
-                            if(n_state.board_state[tile.x-1][tile.y+1].owner === 'White')
+                            if(n_state.board_state[tile.y+1][tile.x-1].owner === 'Black')
                             {
-                                n_state.board_state[tile.x-1][tile.y+1].attack_able = true;
+                                n_state.board_state[tile.y+1][tile.x-1].attack_able = true;
                             }
-                            else if(tile.y+1 === 5 && n_state.board_state[tile.x-1][tile.y+1].passanted)
+                            else if(tile.y+1 === 5 && n_state.board_state[tile.y+1][tile.x-1].passanted)
                             {
-                                n_state.board_state[tile.x-1][tile.y+1].attack_able = true;
+                                n_state.board_state[tile.y+1][tile.x-1].attack_able = true;
                             }
                         }
-                        if(tile.x <= 8)
+                        if(tile.x < 7)
                         {
-                            if(n_state.board_state[tile.x+1][tile.y+1].owner === 'White')
+                            if(n_state.board_state[tile.y+1][tile.x+1].owner === 'Black')
                             {
-                                n_state.board_state[tile.x+1][tile.y+1].attack_able = true;
+                                n_state.board_state[tile.y+1][tile.x+1].attack_able = true;
                             }
-                            else if(tile.y+1 === 5 && n_state.board_state[tile.x+1][tile.y+1].passanted)
+                            else if(tile.y+1 === 5 && n_state.board_state[tile.y+1][tile.x+1].passanted)
                             {
-                                n_state.board_state[tile.x+1][tile.y+1].attack_able = true;
+                                n_state.board_state[tile.y+1][tile.x+1].attack_able = true;
                             }
                         }
                     }
@@ -107,48 +108,48 @@ var play =
                     switch(tile.piece)
                     {
                         case 'King': 
-                            move(n_state.board_state,0,1,tile.x,tile.y,n_state.selected,1);
-                            move(n_state.board_state,0,-1,tile.x,tile.y,n_state.selected,1);
-                            move(n_state.board_state,1,0,tile.x,tile.y,n_state.selected,1);
-                            move(n_state.board_state,-1,0,tile.x,tile.y,n_state.selected,1);
-                            move(n_state.board_state,1,-1,tile.x,tile.y,n_state.selected,1);
-                            move(n_state.board_state,1,1,tile.x,tile.y,n_state.selected,1);
-                            move(n_state.board_state,-1,-1,tile.x,tile.y,n_state.selected,1);
-                            move(n_state.board_state,-1,1,tile.x,tile.y,n_state.selected,1);
+                            move(n_state.board_state,0,1,tile.y,tile.x,n_state.selected,1);
+                            move(n_state.board_state,0,-1,tile.y,tile.x,n_state.selected,1);
+                            move(n_state.board_state,1,0,tile.y,tile.x,n_state.selected,1);
+                            move(n_state.board_state,-1,0,tile.y,tile.x,n_state.selected,1);
+                            move(n_state.board_state,1,-1,tile.y,tile.x,n_state.selected,1);
+                            move(n_state.board_state,1,1,tile.y,tile.x,n_state.selected,1);
+                            move(n_state.board_state,-1,-1,tile.y,tile.x,n_state.selected,1);
+                            move(n_state.board_state,-1,1,tile.y,tile.x,n_state.selected,1);
                             break;
                         case 'Queen': 
-                            move(n_state.board_state,0,1,tile.x,tile.y,n_state.selected,8);
-                            move(n_state.board_state,0,-1,tile.x,tile.y,n_state.selected,8);
-                            move(n_state.board_state,1,0,tile.x,tile.y,n_state.selected,8);
-                            move(n_state.board_state,-1,0,tile.x,tile.y,n_state.selected,8);
-                            move(n_state.board_state,1,-1,tile.x,tile.y,n_state.selected,8);
-                            move(n_state.board_state,1,1,tile.x,tile.y,n_state.selected,8);
-                            move(n_state.board_state,-1,-1,tile.x,tile.y,n_state.selected,8);
-                            move(n_state.board_state,-1,1,tile.x,tile.y,n_state.selected,8);
+                            move(n_state.board_state,0,1,tile.y,tile.x,n_state.selected,8);
+                            move(n_state.board_state,0,-1,tile.y,tile.x,n_state.selected,8);
+                            move(n_state.board_state,1,0,tile.y,tile.x,n_state.selected,8);
+                            move(n_state.board_state,-1,0,tile.y,tile.x,n_state.selected,8);
+                            move(n_state.board_state,1,-1,tile.y,tile.x,n_state.selected,8);
+                            move(n_state.board_state,1,1,tile.y,tile.x,n_state.selected,8);
+                            move(n_state.board_state,-1,-1,tile.y,tile.x,n_state.selected,8);
+                            move(n_state.board_state,-1,1,tile.y,tile.x,n_state.selected,8);
                             break;
                         case 'Rook':
-                            move(n_state.board_state,0,1,tile.x,tile.y,n_state.selected,8);
-                            move(n_state.board_state,0,-1,tile.x,tile.y,n_state.selected,8);
-                            move(n_state.board_state,1,0,tile.x,tile.y,n_state.selected,8);
-                            move(n_state.board_state,-1,0,tile.x,tile.y,n_state.selected,8);
+                            move(n_state.board_state,0,1,tile.y,tile.x,n_state.selected,8);
+                            move(n_state.board_state,0,-1,tile.y,tile.x,n_state.selected,8);
+                            move(n_state.board_state,1,0,tile.y,tile.x,n_state.selected,8);
+                            move(n_state.board_state,-1,0,tile.y,tile.x,n_state.selected,8);
                             break;
                             
                         case 'Knight':
-                            move(n_state.board_state,2,1,tile.x,tile.y,n_state.selected,1);
-                            move(n_state.board_state,2,-1,tile.x,tile.y,n_state.selected,1);
-                            move(n_state.board_state,1,2,tile.x,tile.y,n_state.selected,1);
-                            move(n_state.board_state,-1,2,tile.x,tile.y,n_state.selected,1);
-                            move(n_state.board_state,1,-2,tile.x,tile.y,n_state.selected,1);
-                            move(n_state.board_state,-1,-2,tile.x,tile.y,n_state.selected,1);
-                            move(n_state.board_state,-2,-1,tile.x,tile.y,n_state.selected,1);
-                            move(n_state.board_state,-2,1,tile.x,tile.y,n_state.selected,1);
+                            move(n_state.board_state,2,1,tile.y,tile.x,n_state.selected,1);
+                            move(n_state.board_state,2,-1,tile.y,tile.x,n_state.selected,1);
+                            move(n_state.board_state,1,2,tile.y,tile.x,n_state.selected,1);
+                            move(n_state.board_state,-1,2,tile.y,tile.x,n_state.selected,1);
+                            move(n_state.board_state,1,-2,tile.y,tile.x,n_state.selected,1);
+                            move(n_state.board_state,-1,-2,tile.y,tile.x,n_state.selected,1);
+                            move(n_state.board_state,-2,-1,tile.y,tile.x,n_state.selected,1);
+                            move(n_state.board_state,-2,1,tile.y,tile.x,n_state.selected,1);
                             break;
                             
                         case 'Bishop':
-                            move(n_state.board_state,1,-1,tile.x,tile.y,n_state.selected,8);
-                            move(n_state.board_state,1,1,tile.x,tile.y,n_state.selected,8);
-                            move(n_state.board_state,-1,-1,tile.x,tile.y,n_state.selected,8);
-                            move(n_state.board_state,-1,1,tile.x,tile.y,n_state.selected,8);
+                            move(n_state.board_state,1,-1,tile.y,tile.x,n_state.selected,8);
+                            move(n_state.board_state,1,1,tile.y,tile.x,n_state.selected,8);
+                            move(n_state.board_state,-1,-1,tile.y,tile.x,n_state.selected,8);
+                            move(n_state.board_state,-1,1,tile.y,tile.x,n_state.selected,8);
                             break;
                     }
                     console.log("Not pawn selected");
@@ -162,7 +163,7 @@ var play =
     }
     
 /**
- * Removes all current selected movable, passantable and attackable 
+ * Removes all current selected moveable, passantable and attackable 
  */
 var clear_board_threat = function(board_state){
     for(var i = 0; i < board_state.length; i++)
@@ -179,7 +180,7 @@ var clear_board_threat = function(board_state){
 
 
 /**
- * Removes all current selected movable, passantable and attackable 
+ * Removes all current selected moveable, passantable and attackable 
  */
 var clear_board = function(board_state,selected){
     for(var i = 0; i < board_state.length; i++)
@@ -188,7 +189,7 @@ var clear_board = function(board_state,selected){
         {
             board_state[i][j].selected = false;
             board_state[i][j].attack_able = false;
-            board_state[i][j].movable = false;
+            board_state[i][j].moveable = false;
             board_state[i][j].passanted = false;
         }
     }
@@ -206,110 +207,110 @@ var calc_threat = function(board_state){
     {
         for(var j = 0; j < board_state.length; j++)
         {
-            var tile = board_state[i][j];
+            var tile = board_state[j][i];
             if(tile.piece !== 'Empty')
             {
                 if(tile.piece === 'Pawn')
                 {
                     //pawns are little pieces of dung
-                    if(tile.owner === 'White')
+                    if(tile.owner === 'Black')
                     {
-                        if(tile.x > 0)
+                        if(i > 0)
                         {
-                            if(board_state[tile.x-1][tile.y-1].owner === 'Black')
+                            if(board_state[j-1][i-1].owner === 'White')
                             {
-                                board_state[tile.x-1][tile.y-1].threat_white++;
+                                board_state[j-1][i-1].threat_white++;
                             }
-                            else if(tile.y-1 === 2 && board_state[tile.x-1][tile.y-1].passanted)
+                            else if(j-1 === 2 && board_state[j-1][i-1].passanted)
                             {
-                                board_state[tile.x-1][tile.y-1].threat_white++;
+                                board_state[j-1][i-1].threat_white++;
                             }
                         }
-                        if(tile.x <= 8)
+                        if(i < 7)
                         {
-                            if(board_state[tile.x+1][tile.y-1].owner === 'Black')
+                            if(board_state[j-1][i+1].owner === 'White')
                             {
-                                board_state[tile.x+1][tile.y-1].threat_white++;
+                                board_state[j-1][i+1].threat_white++;
                             }
-                            else if(tile.y-1 === 2 && board_state[tile.x+1][tile.y-1].passanted)
+                            else if(j-1 === 2 && board_state[j-1][i+1].passanted)
                             {
-                                board_state[tile.x+1][tile.y-1].threat_white++;
+                                board_state[j-1][i+1].threat_white++;
                             }
                         }
                     }
                     else
                     {
-                        if(tile.x > 0)
+                        if(i > 0)
                         {
-                            if(board_state[tile.x-1][tile.y+1].owner === 'White')
+                            if(board_state[j+1][i-1].owner === 'Black')
                             {
-                                board_state[tile.x-1][tile.y+1].threat_black++;
+                                board_state[j+1][i-1].threat_black++;
                             }
-                            else if(tile.y+1 === 5 && board_state[tile.x-1][tile.y+1].passanted)
+                            else if(j+1 === 5 && board_state[j+1][i-1].passanted)
                             {
-                                board_state[tile.x-1][tile.y+1].threat_black++;
+                                board_state[j+1][i-1].threat_black++;
                             }
                         }
-                        if(tile.x <= 8)
+                        if(i < 7)
                         {
-                            if(board_state[tile.x+1][tile.y+1].owner === 'White')
+                            if(board_state[j+1][i+1].owner === 'Black')
                             {
-                                board_state[tile.x+1][tile.y+1].threat_black++;
+                                board_state[j+1][i+1].threat_black++;
                             }
-                            else if(tile.y+1 === 5 && board_state[tile.x+1][tile.y+1].passanted)
+                            else if(j+1 === 5 && board_state[j+1][i+1].passanted)
                             {
-                                board_state[tile.x+1][tile.y+1].threat_black++;
+                                board_state[j+1][i+1].threat_black++;
                             }
                         }
                     }
                 }
                 else
                 {
-                    switch(tile.piece)
+                    switch(tile.piece,i,j)
                     {
                         case 'King': 
-                            calc_threat_move(board_state,0,1,tile.x,tile.y,tile.piece,1);
-                            calc_threat_move(board_state,0,-1,tile.x,tile.y,tile.piece,1);
-                            calc_threat_move(board_state,1,0,tile.x,tile.y,tile.piece,1);
-                            calc_threat_move(board_state,-1,0,tile.x,tile.y,tile.piece,1);
-                            calc_threat_move(board_state,1,-1,tile.x,tile.y,tile.piece,1);
-                            calc_threat_move(board_state,1,1,tile.x,tile.y,tile.piece,1);
-                            calc_threat_move(board_state,-1,-1,tile.x,tile.y,tile.piece,1);
-                            calc_threat_move(board_state,-1,1,tile.x,tile.y,tile.piece,1);
+                            calc_threat_move(board_state,0,1,i,j,tile.piece,i,j,1);
+                            calc_threat_move(board_state,0,-1,i,j,tile.piece,i,j,1);
+                            calc_threat_move(board_state,1,0,i,j,tile.piece,i,j,1);
+                            calc_threat_move(board_state,-1,0,i,j,tile.piece,i,j,1);
+                            calc_threat_move(board_state,1,-1,i,j,tile.piece,i,j,1);
+                            calc_threat_move(board_state,1,1,i,j,tile.piece,i,j,1);
+                            calc_threat_move(board_state,-1,-1,i,j,tile.piece,i,j,1);
+                            calc_threat_move(board_state,-1,1,i,j,tile.piece,i,j,1);
                             break;
                         case 'Queen': 
-                            calc_threat_move(board_state,0,1,tile.x,tile.y,tile.piece,8);
-                            calc_threat_move(board_state,0,-1,tile.x,tile.y,tile.piece,8);
-                            calc_threat_move(board_state,1,0,tile.x,tile.y,tile.piece,8);
-                            calc_threat_move(board_state,-1,0,tile.x,tile.y,tile.piece,8);
-                            calc_threat_move(board_state,1,-1,tile.x,tile.y,tile.piece,8);
-                            calc_threat_move(board_state,1,1,tile.x,tile.y,tile.piece,8);
-                            calc_threat_move(board_state,-1,-1,tile.x,tile.y,tile.piece,8);
-                            calc_threat_move(board_state,-1,1,tile.x,tile.y,tile.piece,8);
+                            calc_threat_move(board_state,0,1,i,j,tile.piece,i,j,8);
+                            calc_threat_move(board_state,0,-1,i,j,tile.piece,i,j,8);
+                            calc_threat_move(board_state,1,0,i,j,tile.piece,i,j,8);
+                            calc_threat_move(board_state,-1,0,i,j,tile.piece,i,j,8);
+                            calc_threat_move(board_state,1,-1,i,j,tile.piece,i,j,8);
+                            calc_threat_move(board_state,1,1,i,j,tile.piece,i,j,8);
+                            calc_threat_move(board_state,-1,-1,i,j,tile.piece,i,j,8);
+                            calc_threat_move(board_state,-1,1,i,j,tile.piece,i,j,8);
                             break;
                         case 'Rook':
-                            calc_threat_move(board_state,0,1,tile.x,tile.y,tile.piece,8);
-                            calc_threat_move(board_state,0,-1,tile.x,tile.y,tile.piece,8);
-                            calc_threat_move(board_state,1,0,tile.x,tile.y,tile.piece,8);
-                            calc_threat_move(board_state,-1,0,tile.x,tile.y,tile.piece,8);
+                            calc_threat_move(board_state,0,1,i,j,tile.piece,i,j,8);
+                            calc_threat_move(board_state,0,-1,i,j,tile.piece,i,j,8);
+                            calc_threat_move(board_state,1,0,i,j,tile.piece,i,j,8);
+                            calc_threat_move(board_state,-1,0,i,j,tile.piece,i,j,8);
                             break;
                             
                         case 'Knight':
-                            calc_threat_move(board_state,2,1,tile.x,tile.y,tile.piece,1);
-                            calc_threat_move(board_state,2,-1,tile.x,tile.y,tile.piece,1);
-                            calc_threat_move(board_state,1,2,tile.x,tile.y,tile.piece,1);
-                            calc_threat_move(board_state,-1,2,tile.x,tile.y,tile.piece,1);
-                            calc_threat_move(board_state,1,-2,tile.x,tile.y,tile.piece,1);
-                            calc_threat_move(board_state,-1,-2,tile.x,tile.y,tile.piece,1);
-                            calc_threat_move(board_state,-2,-1,tile.x,tile.y,tile.piece,1);
-                            calc_threat_move(board_state,-2,1,tile.x,tile.y,tile.piece,1);
+                            calc_threat_move(board_state,2,1,i,j,tile.piece,i,j,1);
+                            calc_threat_move(board_state,2,-1,i,j,tile.piece,i,j,1);
+                            calc_threat_move(board_state,1,2,i,j,tile.piece,i,j,1);
+                            calc_threat_move(board_state,-1,2,i,j,tile.piece,i,j,1);
+                            calc_threat_move(board_state,1,-2,i,j,tile.piece,i,j,1);
+                            calc_threat_move(board_state,-1,-2,i,j,tile.piece,i,j,1);
+                            calc_threat_move(board_state,-2,-1,i,j,tile.piece,i,j,1);
+                            calc_threat_move(board_state,-2,1,i,j,tile.piece,i,j,1);
                             break;
                             
                         case 'Bishop':
-                            calc_threat_move(board_state,1,-1,tile.x,tile.y,tile.piece,8);
-                            calc_threat_move(board_state,1,1,tile.x,tile.y,tile.piece,8);
-                            calc_threat_move(board_state,-1,-1,tile.x,tile.y,tile.piece,8);
-                            calc_threat_move(board_state,-1,1,tile.x,tile.y,tile.piece,8);
+                            calc_threat_move(board_state,1,-1,i,j,tile.piece,i,j,8);
+                            calc_threat_move(board_state,1,1,i,j,tile.piece,i,j,8);
+                            calc_threat_move(board_state,-1,-1,i,j,tile.piece,i,j,8);
+                            calc_threat_move(board_state,-1,1,i,j,tile.piece,i,j,8);
                             break;
                     }
                 }
@@ -320,9 +321,9 @@ var calc_threat = function(board_state){
 
 var move_piece = function(game_state,nx,ny){
         var selected = game_state.selected;
-        var orgin_tile = game_state.board_state[selected.x][selected.y];
+        var orgin_tile = game_state.board_state[selected.y][selected.x];
         var tile = game_state.board_state[nx][ny];
-        if(tile.movable)
+        if(tile.moveable)
         {
             //Move piece
             tile.piece = selected.piece;
@@ -415,8 +416,8 @@ var end_turn = function(game_state){
 /**
  * Calculates the threatened and supported tiles
  */
-var calc_threat_move = function(board_state,dx,dy,x,y,selected,repeat){
-    var tile = board_state[selected.x][selected.y];
+var calc_threat_move = function(board_state,dx,dy,x,y,selected,ox,oy,repeat){
+    var tile = board_state[oy][ox];
     if(x+dx >= 0 && x + dx < 8 && y + dy >= 0 && y + dy < 8)
     {
         var n_tile = board_state[x+dx][y+dy];
@@ -457,11 +458,11 @@ var calc_threat_move = function(board_state,dx,dy,x,y,selected,repeat){
  * 
  */
 var move = function(board_state,dx,dy,x,y,selected,repeat){
-    var tile = board_state[selected.x][selected.y];
-    var king_stop = (selected.piece === "King" && tile.owner === "Black" && n_tile.threat_white === 0)||(selected.piece === "King" && tile.owner === "White" && n_tile.threat_black === 0);
+    var tile = board_state[selected.y][selected.x];
     if(x+dx >= 0 && x + dx < 8 && y + dy >= 0 && y + dy < 8)
     {
         var n_tile = board_state[x+dx][y+dy];
+        var king_stop = (selected.piece === "King" && tile.owner === "Black" && n_tile.threat_white === 0)||(selected.piece === "King" && tile.owner === "White" && n_tile.threat_black === 0);
         if(king_stop||selected.piece !== "King")
         {
             if(n_tile.owner === "None"){

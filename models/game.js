@@ -19,7 +19,7 @@ var Game = mongoose.Schema({
                 x       :   Number,
                 y       :   Number,
                 selected:   Boolean,
-                movable :   Boolean,
+                moveable :   Boolean,
                 attack_able:Boolean,
                 passanted:  Boolean,
                 threat_white : Number,

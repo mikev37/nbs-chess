@@ -392,6 +392,12 @@ app.get('/game/debug', function (req, res) {
                         if(gam.board_state[ix][jx].selected){
                             str+="X";
                         }
+                        else if(gam.board_state[ix][jx].moveable){
+                            str+="M";
+                        }
+                        else if(gam.board_state[ix][jx].attack_able){
+                            str+="A";
+                        }
                         else if(gam.board_state[ix][jx].tile === "Black")
                         {
                             str+="-";
@@ -431,23 +437,18 @@ app.put('/game/play', function (req, res) {
             res.status(404).send("Could not find such a user");
         }
         else Game.findOne({ _id : game_id }, function(err, gam) {
-            console.log("WWWWWW");
             if(err!==null){
-                console.log("MMMM");
                 res.status(500).send(err);
             }
             else if(gam === null)
             {
-                console.log("asdsd");
                 res.status(404).send("Could not find such a game");
             }
             else {
-                console.log("RREEEEEE");
                 if(usr._id == gam.white_player || usr._id == gam.black_player){
-                    console.log("WBCJHEK");
                     //find if user is the current turn
                     var white_usr = usr._id == gam.white_player && gam.is_white;
-                    var black_usr = usr._id == gam.black_player && gam.is_black;
+                    var black_usr = usr._id == gam.black_player && !gam.is_white;
                     if(white_usr || black_usr){
                         // console.log("GAME "+gam);
                         game_play.default(gam,x,y,function(){
