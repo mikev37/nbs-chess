@@ -12,7 +12,7 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/mydb');
 mongoose.Promise = require('bluebird');
 
-var init_board = require("./board_test.js");
+var init_board = require("./board.js");
 
 init_board = init_board.board;
 
@@ -388,11 +388,11 @@ app.get('/game/debug', function (req, res) {
                             str+=gam.board_state[ix][jx].piece.charAt(0).toLowerCase();
                         }
                     }
-                    /*else if((j)%3 === 2 && i%3===0 ){
+                    else if((j)%3 === 2 && i%3===0 ){
                         str+=gam.board_state[ix][jx].threat_white;
                     }
-                    else if((j)%3 === 2 && i%3===2 ){
-                        str+=gam.board_state[ix][jx].threat_white;
+                    /*else if((j)%3 === 2 && i%3===2 ){
+                        str+=gam.board_state[ix][jx].threat_black;
                     }*/
                     else if(((j)%3 === 1 && i%3===1 )||((j)%3 === 0 && i%3===1 )){
                         if(gam.board_state[ix][jx].tile === "Black")
