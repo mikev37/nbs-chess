@@ -10,6 +10,10 @@ var Game = mongoose.Schema({
     check_white : Boolean,
     is_white : Boolean,
     turn_num : Number,
+    black_castle_r : { type: Boolean, default: true },
+    white_castle_r : { type: Boolean, default: true },
+    black_castle_l : { type: Boolean, default: true },
+    white_castle_l : { type: Boolean, default: true },
     board_state : [
         [
             {

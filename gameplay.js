@@ -7,10 +7,6 @@
  * Out
  *  new board state
  */
-var promise = new Promise(function(){
-    
-});
- 
 var play = 
     function(game_state,x,y){
         var n_state = game_state;
@@ -48,6 +44,10 @@ var play =
                         if(n_state.board_state[tile.y-1][tile.x].owner === 'None')
                         {
                             n_state.board_state[tile.y-1][tile.x].moveable = true;
+                            if(tile.y === 6 && n_state.board_state[tile.y-2][tile.x].owner === 'None')
+                            {
+                                n_state.board_state[tile.y-2][tile.x].moveable = true;
+                            }
                         }
                         if(tile.x > 0)
                         {
@@ -77,6 +77,10 @@ var play =
                         if(n_state.board_state[tile.y+1][tile.x].owner === 'None')
                         {
                             n_state.board_state[tile.y+1][tile.x].moveable = true;
+                            if(tile.y === 1 && n_state.board_state[tile.y+2][tile.x].owner === 'None')
+                            {
+                                n_state.board_state[tile.y+2][tile.x].moveable = true;
+                            }
                         }
                         if(tile.x > 0)
                         {
@@ -105,9 +109,46 @@ var play =
                 else
                 {
                     console.log("selecting not pawn")
+                    if(tile.piece === "King"){
+                        if(n_state.is_white && !n_state.check_white){
+                            //if none of the places between the king and rook are occupied or in check, add as movement option
+                            if(n_state.white_castle_l && n_state.board_state[0][3].piece === "Empty" && n_state.board_state[0][2].piece === "Empty" && n_state.board_state[0][1].piece === "Empty")
+                            {
+                                if(n_state.board_state[0][3].threat_black === 0 && n_state.board_state[0][2].threat_black === 0)
+                                {
+                                    n_state.board_state[0][2].moveable = true;
+                                }
+                            }
+                            if(n_state.white_castle_r && n_state.board_state[0][5].piece === "Empty" && n_state.board_state[0][6].piece === "Empty")
+                            {
+                                if(n_state.board_state[0][5].threat_black === 0 && n_state.board_state[0][6].threat_black === 0)
+                                {
+                                    n_state.board_state[0][6].moveable = true;
+                                }
+                            }
+                        }
+                        else if(!n_state.is_white &&  !n_state.check_black){
+                            if(n_state.black_castle_l &&  n_state.board_state[7][2].piece === "Empty" &&  n_state.board_state[7][3].piece === "Empty" && n_state.board_state[7][1].piece === "Empty")
+                            {
+                                if(n_state.board_state[7][3].threat_white === 0 && n_state.board_state[7][2].threat_white === 0)
+                                {
+                                    n_state.board_state[7][2].moveable = true;
+                                }
+                            }
+                            if(n_state.black_castle_r && n_state.board_state[7][5].piece === "Empty" && n_state.board_state[7][6].piece === "Empty")
+                            {
+                                if(n_state.board_state[7][5].threat_white === 0 && n_state.board_state[7][6].threat_white === 0)
+                                {
+                                    n_state.board_state[7][6].moveable = true;
+                                }
+                            }
+                        }
+                    }
                     switch(tile.piece)
                     {
                         case 'King': 
+                            //Add a special case for Castling
+                            
                             move(n_state.board_state,0,1,tile.y,tile.x,n_state.selected,1);
                             move(n_state.board_state,0,-1,tile.y,tile.x,n_state.selected,1);
                             move(n_state.board_state,1,0,tile.y,tile.x,n_state.selected,1);
@@ -178,7 +219,35 @@ var clear_board_threat = function(board_state){
     return board_state;
 }
 
-
+/*
+    Pawn bullshit
+*/
+var pawn_check = function(game_state,nx,ny){
+    var selected = game_state.selected;
+    var orgin_tile = game_state.board_state[selected.y][selected.x];
+    var tile = game_state.board_state[nx][ny];
+    if(tile.moveable)
+    {
+        if(orgin_tile.piece === "Pawn"&&orgin_tile.y === 1 && tile.y === 3)
+        {
+            game_state.board_state[2][orgin_tile.x].passanted = true;
+        }
+        if(orgin_tile.piece === "Pawn"&&orgin_tile.y ===6 && tile.y === 4 )
+        {
+            game_state.board_state[5][orgin_tile.x].passanted = true;
+        }
+    }
+    if(orgin_tile.piece === "Pawn" && orgin_tile.owner === "White" && tile.y === 7)
+    {
+        orgin_tile.piece = "Queen";
+    }
+    if(orgin_tile.piece === "Pawn" && orgin_tile.owner === "Black" && tile.y === 0)
+    {
+        orgin_tile.piece = "Queen";
+    }
+    
+    return game_state;
+}
 /**
  * Removes all current selected moveable, passantable and attackable 
  */
@@ -215,6 +284,17 @@ var calc_threat = function(board_state){
                     //pawns are little pieces of dung
                     if(tile.owner === 'Black')
                     {
+                        if(i > 0)
+                        {
+                            if(board_state[j-1][i-1].owner === 'White')
+                            {
+                                board_state[j-1][i-1].threat_white++;
+                            }
+                            else if(j-1 === 2 && board_state[j-1][i-1].passanted)
+                            {
+                                board_state[j-1][i-1].threat_white++;
+                            }
+                        }
                         if(i > 0)
                         {
                             if(board_state[j-1][i-1].owner === 'White')
@@ -266,6 +346,7 @@ var calc_threat = function(board_state){
                 }
                 else
                 {
+
                     switch(tile.piece,i,j)
                     {
                         case 'King': 
@@ -319,12 +400,115 @@ var calc_threat = function(board_state){
     }
 }
 
+var castle_check = function(game_state,nx,ny){
+    var selected = game_state.selected;
+    var orgin_tile = game_state.board_state[selected.y][selected.x];
+    var tile = game_state.board_state[nx][ny];
+    if(tile.moveable)
+    {
+        
+        if(orgin_tile.owner === "White" && selected.piece === "King" && selected.y === 0 && selected.x === 4)
+            {
+                if(nx === 0 && ny === 2 && game_state.white_castle_l)
+                {
+                    game_state.white_castle_l = false;
+                    game_state.white_castle_r = false;
+                    
+                    var rook_tile = game_state.board_state[0][0];
+                    var nrook_tile = game_state.board_state[0][3];
+                    
+                    rook_tile.piece = "Empty";
+                    rook_tile.owner = "None";
+                    
+                    nrook_tile.piece = "Rook";
+                    nrook_tile.owner = "White";
+                }
+                else if(nx === 0 && ny === 6 && game_state.white_castle_r)
+                {
+                    game_state.white_castle_l = false;
+                    game_state.white_castle_r = false;
+                    
+                    var rook_tile = game_state.board_state[0][7];
+                    var nrook_tile = game_state.board_state[0][5];
+                    
+                    rook_tile.piece = "Empty";
+                    rook_tile.owner = "None";
+                    
+                    nrook_tile.piece = "Rook";
+                    nrook_tile.owner = "White";
+                }
+            }
+            
+            else if(orgin_tile.owner === "Black" && selected.piece === "King" && selected.y === 7 && selected.x === 4)
+            {
+                if(nx === 7 && ny === 2 && game_state.black_castle_l)
+                {
+                    game_state.white_castle_l = false;
+                    game_state.white_castle_r = false;
+                    
+                    var rook_tile = game_state.board_state[7][0];
+                    var nrook_tile = game_state.board_state[7][3];
+                    
+                    rook_tile.piece = "Empty";
+                    rook_tile.owner = "None";
+                    
+                    nrook_tile.piece = "Rook";
+                    nrook_tile.owner = "Black";
+                }
+                else if(nx === 7 && ny === 6 && game_state.black_castle_r)
+                {
+                    game_state.white_castle_l = false;
+                    game_state.white_castle_r = false;
+                    
+                    var rook_tile = game_state.board_state[7][7];
+                    var nrook_tile = game_state.board_state[7][5];
+                    
+                    rook_tile.piece = "Empty";
+                    rook_tile.owner = "None";
+                    
+                    nrook_tile.piece = "Rook";
+                    nrook_tile.owner = "Black";
+                }
+            }
+            else if(orgin_tile.owner === "Black" && selected.piece === "King")
+            {
+                    game_state.black_castle_l = false;
+                    game_state.black_castle_r = false;
+            }
+            else if(orgin_tile.owner === "White" && selected.piece === "King")
+            {
+                    game_state.white_castle_l = false;
+                    game_state.white_castle_r = false
+            }
+            else if(orgin_tile.owner === "Black" && selected.piece === "Rook" && selected.y === 0 && selected.x === 7)
+            {
+                    game_state.black_castle_l = false;
+            }
+            else if(orgin_tile.owner === "Black" && selected.piece === "Rook" && selected.y === 7 && selected.x === 7)
+            {
+                    game_state.black_castle_r = false;
+            }
+            else if(orgin_tile.owner === "White" && selected.piece === "Rook" && selected.y === 7 && selected.x === 0)
+            {
+                    game_state.white_castle_l = false;
+            }
+            else if(orgin_tile.owner === "White" && selected.piece === "Rook" && selected.y === 0 && selected.x === 0)
+            {
+                    game_state.white_castle_r = false;
+            }
+    }
+    return game_state;
+}
+
 var move_piece = function(game_state,nx,ny){
         var selected = game_state.selected;
         var orgin_tile = game_state.board_state[selected.y][selected.x];
         var tile = game_state.board_state[nx][ny];
         if(tile.moveable)
         {
+            //Add a special case for castling
+            game_state = castle_check(game_state,nx,ny);
+            game_state = pawn_check(game_state,nx,ny);
             //Move piece
             tile.piece = selected.piece;
             tile.owner = orgin_tile.owner;
@@ -375,11 +559,14 @@ var king_threat = function(game_state,is_white){
  Check if this move is valid with the kings and such.
 */
 var make_move = function(game_state, nx,ny){
+    var tile = game_state.board_state[nx][ny];
+    if(!tile.moveable && !tile.attack_able) return game_state;
     var copy_board = JSON.parse(JSON.stringify(game_state));
     //clear the threat
     copy_board.board_state = clear_board_threat(copy_board.board_state);
     //find if the king is under threat after the move
     clear_board_threat(copy_board.board_state);
+    
     move_piece(copy_board,nx,ny);
     calc_threat(copy_board.board_state);
     //reject the move if so.

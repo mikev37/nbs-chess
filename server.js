@@ -451,9 +451,14 @@ app.put('/game/play', function (req, res) {
                     var black_usr = usr._id == gam.black_player && !gam.is_white;
                     if(white_usr || black_usr){
                         // console.log("GAME "+gam);
-                        game_play.default(gam,x,y,function(){
-                            console.log("CAllbac?");
-                        });
+                        try{
+                            game_play.default(gam,x,y,function(){
+                                console.log("CAllbac?");
+                            });
+                        }
+                        catch(err){
+                            console.log("Errors have occurred" + err);
+                        }
                         console.log("______________________________");
                         // console.log("GAME "+gam);
                         // console.log(gam.save());
