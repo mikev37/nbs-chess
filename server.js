@@ -12,7 +12,7 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/mydb');
 mongoose.Promise = require('bluebird');
 
-var init_board = require("./board.js");
+var init_board = require("./board_test.js");
 
 init_board = init_board.board;
 
@@ -365,7 +365,7 @@ app.get('/game/debug', function (req, res) {
         {
             
             var str ="\n\n";
-            str+= "--0--1--2--3--4--5--6--7-\n";
+            str+= "╔═0══1══2══3══4══5══6══7═Y\n";
             for(var i = 0; i < gam.board_state.length*3; i++){
                 var ix = (i/3 )|0;
                 for(var j = 0; j < gam.board_state.length*3+1; j++){
@@ -376,7 +376,7 @@ app.get('/game/debug', function (req, res) {
                         {
                             str+=String.fromCharCode(97 + ix);
                         }
-                        else str+="-";
+                        else str+="║";
                     }
                     else if((j)%3 === 2 && i%3===1 && gam.board_state[ix][jx].piece !== "Empty"){
                         
@@ -388,6 +388,19 @@ app.get('/game/debug', function (req, res) {
                             str+=gam.board_state[ix][jx].piece.charAt(0).toLowerCase();
                         }
                     }
+                    /*else if((j)%3 === 2 && i%3===0 ){
+                        str+=gam.board_state[ix][jx].threat_white;
+                    }
+                    else if((j)%3 === 2 && i%3===2 ){
+                        str+=gam.board_state[ix][jx].threat_white;
+                    }*/
+                    else if(((j)%3 === 1 && i%3===1 )||((j)%3 === 0 && i%3===1 )){
+                        if(gam.board_state[ix][jx].tile === "Black")
+                        {
+                            str+="¤";
+                        }
+                        else str+=" ";
+                    }
                     else{
                         if(gam.board_state[ix][jx].selected){
                             str+="X";
@@ -398,9 +411,12 @@ app.get('/game/debug', function (req, res) {
                         else if(gam.board_state[ix][jx].attack_able){
                             str+="A";
                         }
+                        else if(gam.board_state[ix][jx].passanted){
+                            str+="P";
+                        }
                         else if(gam.board_state[ix][jx].tile === "Black")
                         {
-                            str+="-";
+                            str+="¤";
                         }
                         else str+=" ";
                     }
@@ -408,7 +424,17 @@ app.get('/game/debug', function (req, res) {
                 str+="\n"
             }
             
-            str+="\n\n";
+            str+="X════════════════════════\n\n";
+            str+="Turn Number"+gam.turn_num+"\n";
+            if(gam.is_white){str+="White Turn\n"}else{str+="Black Turn\n"}
+            str+="Black Castle Right:"+gam.black_castle_r+"\n";
+            str+="Black Castle Left:"+gam.black_castle_l+"\n";
+            str+="White Castle Right:"+gam.white_castle_r+"\n";
+            str+="White Castle Left:"+gam.white_castle_l+"\n";
+            str+="Black Check:"+gam.check_black+"\n";
+            str+="White Check:"+gam.check_white+"\n";
+            str+="Error Message:"+gam.error_message+"\n";
+            
             res.send(str);
         }
     });

@@ -20,8 +20,11 @@ var play =
             
             console.log("making moves");
             if(game_state.selected === null || game_state.selected.x === -1) return game_state;
+            
+            if(!tile.moveable && !tile.attack_able) return game_state;
+            
             n_state = make_move(n_state,x,y);
-            clear_board(n_state.board_state,n_state.selected);
+            clear_board(n_state.is_white,n_state.board_state,n_state.selected);
             end_turn(n_state);
         }
         else
@@ -29,7 +32,7 @@ var play =
             if((tile.owner === 'White' && game_state.is_white)||(tile.owner === 'Black' && !game_state.is_white))
             {
                 console.log("Selecting unity");
-                clear_board(n_state.board_state,n_state.selected);
+                clear_board(n_state.is_white,n_state.board_state,n_state.selected);
                 n_state.selected.piece = tile.piece;
                 n_state.selected.x = tile.x;
                 n_state.selected.y = tile.y;
@@ -251,7 +254,7 @@ var pawn_check = function(game_state,nx,ny){
 /**
  * Removes all current selected moveable, passantable and attackable 
  */
-var clear_board = function(board_state,selected){
+var clear_board = function(is_white,board_state,selected){
     for(var i = 0; i < board_state.length; i++)
     {
         for(var j = 0; j < board_state.length; j++)
@@ -259,13 +262,28 @@ var clear_board = function(board_state,selected){
             board_state[i][j].selected = false;
             board_state[i][j].attack_able = false;
             board_state[i][j].moveable = false;
-            board_state[i][j].passanted = false;
         }
     }
     if(selected!=null){
         selected.piece = 'Empty';
         selected.x = -1;
         selected.y = -1;
+    }
+}
+
+/*
+Specifically clears the passant squares, only called on the end of a turn
+*/
+var clear_board_passant = function(is_white,board_state,selected){
+    for(var i = 0; i < board_state.length; i++)
+    {
+        for(var j = 0; j < board_state.length; j++)
+        {
+            if(i == 2 && !is_white)
+                board_state[i][j].passanted = false;
+            if(i == 5 && is_white)
+                board_state[i][j].passanted = false;
+        }
     }
 }
 /**
@@ -400,17 +418,54 @@ var calc_threat = function(board_state){
     }
 }
 
+var passant_check = function(game_state,nx,ny){
+    var selected = game_state.selected;
+    var orgin_tile = game_state.board_state[selected.y][selected.x];
+    var tile = game_state.board_state[nx][ny];
+    
+    if(tile.attack_able && tile.passanted)
+    {
+       if(tile.y === 2)
+       {
+           var ntile = game_state.board_state[3][tile.x];
+           ntile.owner = "None";
+           ntile.piece = "Empty";
+       }
+       else if(tile.y === 5)
+       {
+            var ntile = game_state.board_state[4][tile.x];
+            ntile.owner = "None";
+            ntile.piece = "Empty";
+       }
+       
+    }
+    
+    return game_state;
+}
+
 var castle_check = function(game_state,nx,ny){
     var selected = game_state.selected;
     var orgin_tile = game_state.board_state[selected.y][selected.x];
     var tile = game_state.board_state[nx][ny];
+    console.log("Castle Checking!");
     if(tile.moveable)
     {
-        
+        console.log("MOVABLE TILE");
+        console.log("orgin_tile.owner "+orgin_tile.owner);
+        console.log("selected.piece "+selected.piece);
+        console.log("selected.y "+ selected.y);
+        console.log("selected.x "+selected.x);
         if(orgin_tile.owner === "White" && selected.piece === "King" && selected.y === 0 && selected.x === 4)
             {
-                if(nx === 0 && ny === 2 && game_state.white_castle_l)
+                
+                console.log("White Castle check");
+                console.log("tile.y "+tile.y);
+                console.log("tile.x "+tile.x);
+                console.log("game_state.white_castle_l "+game_state.white_castle_l);
+                console.log("game_state.white_castle_r "+game_state.white_castle_r);
+                if(tile.y === 0 && tile.x === 2 && game_state.white_castle_l)
                 {
+                    console.log("Moving left white rook");
                     game_state.white_castle_l = false;
                     game_state.white_castle_r = false;
                     
@@ -423,8 +478,9 @@ var castle_check = function(game_state,nx,ny){
                     nrook_tile.piece = "Rook";
                     nrook_tile.owner = "White";
                 }
-                else if(nx === 0 && ny === 6 && game_state.white_castle_r)
+                else if(tile.y === 0 && tile.x === 6 && game_state.white_castle_r)
                 {
+                    console.log("Moving right white rook");
                     game_state.white_castle_l = false;
                     game_state.white_castle_r = false;
                     
@@ -441,8 +497,14 @@ var castle_check = function(game_state,nx,ny){
             
             else if(orgin_tile.owner === "Black" && selected.piece === "King" && selected.y === 7 && selected.x === 4)
             {
-                if(nx === 7 && ny === 2 && game_state.black_castle_l)
+                console.log("Black Castle check");
+                console.log("tile.y "+tile.y);
+                console.log("tile.x "+tile.x);
+                console.log("game_state.black_castle_l "+game_state.black_castle_l);
+                console.log("game_state.black_castle_r "+game_state.black_castle_r);
+                if(tile.y === 7 && tile.x === 2 && game_state.black_castle_l)
                 {
+                    console.log("Moving left black rook");
                     game_state.white_castle_l = false;
                     game_state.white_castle_r = false;
                     
@@ -455,8 +517,9 @@ var castle_check = function(game_state,nx,ny){
                     nrook_tile.piece = "Rook";
                     nrook_tile.owner = "Black";
                 }
-                else if(nx === 7 && ny === 6 && game_state.black_castle_r)
+                else if(tile.y === 7 && tile.x === 6 && game_state.black_castle_r)
                 {
+                    console.log("Moving right black rook");
                     game_state.white_castle_l = false;
                     game_state.white_castle_r = false;
                     
@@ -472,28 +535,34 @@ var castle_check = function(game_state,nx,ny){
             }
             else if(orgin_tile.owner === "Black" && selected.piece === "King")
             {
+                console.log("Moving king! Clearing castling");
                     game_state.black_castle_l = false;
                     game_state.black_castle_r = false;
             }
             else if(orgin_tile.owner === "White" && selected.piece === "King")
             {
+                console.log("Moving king! Clearing castling");
                     game_state.white_castle_l = false;
                     game_state.white_castle_r = false
             }
             else if(orgin_tile.owner === "Black" && selected.piece === "Rook" && selected.y === 0 && selected.x === 7)
             {
+                console.log("Moving Rook!");
                     game_state.black_castle_l = false;
             }
             else if(orgin_tile.owner === "Black" && selected.piece === "Rook" && selected.y === 7 && selected.x === 7)
             {
+                console.log("Moving Rook!");
                     game_state.black_castle_r = false;
             }
             else if(orgin_tile.owner === "White" && selected.piece === "Rook" && selected.y === 7 && selected.x === 0)
             {
+                console.log("Moving Rook!");
                     game_state.white_castle_l = false;
             }
             else if(orgin_tile.owner === "White" && selected.piece === "Rook" && selected.y === 0 && selected.x === 0)
             {
+                console.log("Moving Rook!");
                     game_state.white_castle_r = false;
             }
     }
@@ -517,6 +586,9 @@ var move_piece = function(game_state,nx,ny){
             orgin_tile.piece = "Empty";
         }
         else if(tile.attack_able){
+            
+            game_state = passant_check(game_state,nx,ny);
+            
             //Take piece
             if(game_state.is_white){
                 var capture = {};
@@ -595,8 +667,10 @@ var make_move = function(game_state, nx,ny){
  * 
  */
 var end_turn = function(game_state){
+    clear_board_passant(game_state.is_white,game_state.board_state,game_state.selected);
     game_state.is_white = !game_state.is_white;
-
+    if(game_state.is_white)
+        game_state.turn_num++;
     return game_state;
 } 
 
