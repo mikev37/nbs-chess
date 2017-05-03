@@ -13,11 +13,11 @@ const Routes = (props) => (
         <Route path="/game/:gameid" component={Game}/>
         <Route path="/user" component={User}/>
         <Route path="/sign-in" component={SignIn}/>
-        <Route path="*" component={NotFound}/>
-        
+      
     </Route>
     
   </Router>
 );
+// <!--<Route path="*" component={NotFound}/>
 
 export default Routes;

@@ -2,7 +2,7 @@
   "name": "nbs_client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8081/",
+  "proxy": "http://localhost:8081",
   "dependencies": {
     "react": "^15.4.2",
     "react-cookie": "^1.0.5",

@@ -63,9 +63,14 @@ Unless
    Password Incorrect
    user DNE
 */
-app.get('/user', function (req, res) {
+app.post('/service/user/get', function (req, res) {
+    console.log(req);
+    
     var user_email = req.body.user_email,
         password = req.body.password;
+        
+    console.log(user_email);
+    console.log(password);
     if(isemail.validate(user_email)){
         User.findOne({'email':user_email,'password':password},function(err,usr){
              if (err) { res.status(500).send("Something went wrong on our end") }
@@ -106,7 +111,7 @@ Unless:
    Email not real
    User email already exists
 */
-app.post('/user', function (req, res) {
+app.post('/service/user/new', function (req, res) {
     try{
     var user_name = req.body.user_name,
         email = req.body.email,
@@ -161,7 +166,7 @@ Out
 Unless
    User DNE
  */
-app.get('/user/players', function (req, res) {
+app.post('/service/user/players', function (req, res) {
     var user_id = req.body.user_id;
     var responce = [];
     
@@ -201,7 +206,7 @@ Out
 Unless
    User DNE
  */
-app.get('/user/games', function (req, res) {
+app.post('/service/user/games', function (req, res) {
     var user_id = req.body.user_id;
     var responce = [];
     
@@ -262,7 +267,7 @@ In
 Out
    Game as JSON
  */
-app.get('/game', function (req, res) {
+app.post('/service/game/get', function (req, res) {
     var id = req.body.game_id;
     Game.findOne({ _id: id }, function(err,gam){
         if(err != null){
@@ -293,7 +298,7 @@ In
 Out
    Game as JSON, add the player to the white or black team
  */
-app.get('/game/join', function (req, res) {
+app.post('/service/game/join', function (req, res) {
     var user_id = req.body.user_id,
         game_id = req.body.game_id,
         is_white = req.body.is_white.toLowerCase() == "true";
@@ -350,7 +355,7 @@ app.get('/game/join', function (req, res) {
     });
 });
 
-app.get('/game/debug', function (req, res) {
+app.get('/service/game/debug', function (req, res) {
     var game_id = req.body.game_id;
     
     Game.findOne({ _id : game_id }, function(err, gam) {
@@ -447,7 +452,7 @@ In
 Out
     Create a new game, assign the user to the game and such.
 */
-app.put('/game/play', function (req, res) {
+app.put('/service/game/play', function (req, res) {
     var game_id = req.body.game_id,
         user_id = req.body.user_id,
         x = req.body.x,
@@ -532,7 +537,7 @@ In
 Out
     Create a new game, assign the user to the game and such.
 */
-app.post('/game', function (req, res) {
+app.post('/service/game/new', function (req, res) {
     var game_name = req.body.name,
         user_id = req.body.user_id;
     
@@ -584,7 +589,7 @@ Out
    Mark Game as Over
    Make other player Winner
  */
-app.delete('/game', function (req, res) {
+app.delete('/service/game', function (req, res) {
     var user_id = req.body.user_id,
         game_id = req.body.game_id;
         

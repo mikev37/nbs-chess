@@ -7,7 +7,7 @@ fetch(`/hello`).then(function(response) {
 });
  
  
-fetch('/help').then(function(response) {
+fetch('/service/help').then(function(response) {
   return response.json();
 }).then(function(data) {
   console.log(data);
