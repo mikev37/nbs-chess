@@ -8,6 +8,7 @@ import LoginPanel from './components/LogIn.js.jsx'
 
 var App = React.createClass({
   componentWillMount() {
+    console.log(cookie.load('userId'));
     this.state =  { userId: cookie.load('userId') };
   },
   onLogin(userId) {
@@ -32,6 +33,7 @@ var App = React.createClass({
 var Dashboard = React.createClass({
   
   render: function() {
+    const userId = this.props.userId;
     return (
       <div className="App">
         <div className="App-header">
@@ -41,8 +43,7 @@ var Dashboard = React.createClass({
         <div className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
           <p><Link to="/">Home</Link></p>
-
-          <p><Link to="/user">User</Link></p>
+          <p><Link to={`/user`}>User</Link></p>
           <p><Link to="/notexist">Not Exist</Link></p>
           {this.props.children}
 
