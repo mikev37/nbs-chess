@@ -28,6 +28,31 @@
   color:#eed;
 }
 
+.board{
+  margin: 5%;
+  padding: 5%;
+  position: fixed;
+  border: 3px solid black;
+  border-radius: 15px;
+}
+
+.piece{
+  margin: 0px;
+  font-size: 4vw;
+}
+
+.board-row{
+  border-color: #000;
+  height:5vw;
+  width:40vw;
+}
+
+.sqr{
+  float:left;
+  width:5vw;
+  height: 5vw;
+}
+
 .sidebar {
   float: right;
   padding-right: 10%;
