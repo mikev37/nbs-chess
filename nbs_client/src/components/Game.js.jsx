@@ -31,6 +31,66 @@ var Game = React.createClass({
         console.log('Send Error (.Y.)', err);  
       })
   },
+  joinBlack(){
+    console.log("Enter join fucntio")
+    var that = this;
+    const usr_obj = cookie.load('userId');
+    fetch("/service/game/join" , {
+	        method: 'POST',
+	        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+	        body: JSON.stringify({
+	          'game_id': that.props.params.gameid,
+	          'user_id': usr_obj._id,
+	          'is_white':"false"
+	        })
+      })
+      .then(function(data){
+          return data.text();
+      })
+      .then(function(data){
+        console.log(data)
+        if(data === "Success!"){
+          that.load();
+        }
+        else{
+          that.setState({error:data});
+        }
+      })
+      .catch(function(err){
+        console.log('Send Error oo==D', err);  
+        that.setState({error:err});
+      });
+  },
+  joinWhite(){
+    console.log("Enter join fucntio")
+    var that = this;
+    const usr_obj = cookie.load('userId');
+    fetch("/service/game/join" , {
+	        method: 'POST',
+	        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+	        body: JSON.stringify({
+	          'game_id': that.props.params.gameid,
+	          'user_id': usr_obj._id,
+	          'is_white':"true"
+	        })
+      })
+      .then(function(data){
+          return data.text();
+      })
+      .then(function(data){
+        console.log(data)
+        if(data === "Success!"){
+          that.load();
+        }
+        else{
+          that.setState({error:data});
+        }
+      })
+      .catch(function(err){
+        console.log('Send Error oo==D', err);  
+        that.setState({error:err});
+      });
+  },
   play(x,y){
     var that = this;
     const usr_obj = cookie.load('userId');
@@ -79,8 +139,10 @@ var Game = React.createClass({
       if(error_message === "")
       {
         error_display = "";
-        if(this.state.game.error_message !== "")
+        if(this.state.game.error_message != null && this.state.game.error_message !== "")
+        {
           error_display = <div className="alert alert-danger">{this.state.game.error_message}</div>;
+        }
       }
       
       if(game.white_player != null)
@@ -97,7 +159,7 @@ var Game = React.createClass({
           white_overview.push(<div className="alert alert-danger"> In Check!</div>);
       }
       else{
-        white_overview.push(<button className="btn btn-block"><h1><ChessPiece piece="King" color="White"/>Join As White</h1></button>);
+        white_overview.push(<button className="btn btn-block" onClick={this.joinWhite}><h1><ChessPiece piece="King" color="White"/>Join As White</h1></button>);
       }
       
       
@@ -115,7 +177,7 @@ var Game = React.createClass({
           black_overview.push(<div className="alert alert-danger"> In Check!</div>);
       }
       else{
-        black_overview.push(<button className="btn btn-block"><h1><ChessPiece piece="King" color="Black"/>Join As Black</h1></button>);
+        black_overview.push(<button className="btn btn-block" onClick={this.joinBlack}><h1><ChessPiece piece="King" color="Black"/>Join As Black</h1></button>);
       }
       
     }
