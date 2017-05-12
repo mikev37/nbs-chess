@@ -31,7 +31,7 @@
 .board{
   margin: 5%;
   padding: 5%;
-  position: fixed;
+  position: absolute;
   border: 3px solid black;
   border-radius: 15px;
 }
@@ -41,10 +41,20 @@
   font-size: 4vw;
 }
 
+.tall{
+  height: 100vw;
+}
+
 .board-row{
   border-color: #000;
   height:5vw;
   width:40vw;
+}
+
+.grey{
+  padding: 5%;
+  margin:5%;
+  background:darkgrey;
 }
 
 .sqr{

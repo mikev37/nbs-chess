@@ -25,7 +25,8 @@ var play =
             
             n_state = make_move(n_state,x,y);
             clear_board(n_state.is_white,n_state.board_state,n_state.selected);
-            end_turn(n_state);
+            if(n_state.error_message === "")
+                end_turn(n_state);
         }
         else
         {

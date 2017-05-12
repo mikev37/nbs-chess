@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import ChessPiece from './ChessPiece.js.jsx';
+import ChessLine from './ChessLine.js.jsx';
+import cookie from 'react-cookie';
 
 var Game = React.createClass({
   componentWillMount() {
-    this.state =  { loaded:false,game:null };
+    this.state =  { error:"",loaded:false,game:null };
     this.load();
   },
   load(){
@@ -21,7 +23,7 @@ var Game = React.createClass({
       .then(function(data){
         if(data){
         console.log(data);
-        that.setState({loaded:true,game:data});
+        that.setState({error:"",loaded:true,game:data});
         
         }
       })
@@ -29,23 +31,111 @@ var Game = React.createClass({
         console.log('Send Error (.Y.)', err);  
       })
   },
-  
+  play(x,y){
+    var that = this;
+    const usr_obj = cookie.load('userId');
+    fetch("/service/game/play" , {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+        body: JSON.stringify({
+          'game_id': that.props.params.gameid,
+          'user_id': usr_obj._id,
+          'x':x,
+          'y':y
+        })
+    })
+    .then(function(data){
+        return data.text();
+    })
+    .then(function(data){
+      console.log(data)
+      if(data === "succesfully saved"){
+        that.load();
+      }
+    })
+    .catch(function(err){
+      that.setState({error:err});
+        
+      console.log('Send Error (.Y.)', err);  
+    })
+  },
   render() {
+    /** Initial variables**/
     var path = this.props.params.gameid;
+    const error_message = this.state.error;
+    var white_overview = [];
+    var black_overview = [];
+    const usr_obj = cookie.load('userId');
+    var error_display = <div className="alert alert-danger">{error_message}</div>;
     
+    /** Loaded state transformation **/
     if(this.state.loaded){
-      path = <GameBoard board_state={this.state.game.board_state}/>
+      
+      const game = this.state.game;
+      
+      path = <GameBoard board_state={game.board_state} onPlay={this.play}/>
+      
+      
+      if(error_message === "")
+      {
+        error_display = "";
+        if(this.state.game.error_message !== "")
+          error_display = <div className="alert alert-danger">{this.state.game.error_message}</div>;
+      }
+      
+      if(game.white_player != null)
+      {
+        if(game.is_white)
+          white_overview.push(<h1><div className="glyphicon glyphicon-menu-right pull-left"></div></h1>);
+        white_overview.push(<h2><ChessPiece piece="King" color="White"/>White Player</h2>);
+        if(game.white_player === usr_obj._id){
+          white_overview.push(<span>(you)</span>);
+        }
+        const taken = <ChessLine arr={game.white_captured} color="Black"/>;
+        white_overview.push(<div>Pieces Taken: {taken} </div>);
+        if(game.check_white)
+          white_overview.push(<div className="alert alert-danger"> In Check!</div>);
+      }
+      else{
+        white_overview.push(<button className="btn btn-block"><h1><ChessPiece piece="King" color="White"/>Join As White</h1></button>);
+      }
+      
+      
+      if(game.black_player != null)
+      {
+        if(!game.is_white)
+          black_overview.push(<h1><div className="glyphicon glyphicon-menu-right pull-left"></div></h1>);
+        black_overview.push(<h2><ChessPiece piece="King" color="Black"/>Black Player</h2>);
+        if(game.black_player === usr_obj._id){
+          black_overview.push(<span>(you)</span>);
+        }
+        const taken = <ChessLine arr={game.black_captured} color="White"/>;
+        black_overview.push(<div>Pieces Taken: {taken} </div>);
+        if(game.check_black)
+          black_overview.push(<div className="alert alert-danger"> In Check!</div>);
+      }
+      else{
+        black_overview.push(<button className="btn btn-block"><h1><ChessPiece piece="King" color="Black"/>Join As Black</h1></button>);
+      }
+      
     }
-    
+
+
+    /** Render step **/
     return (
       <div>
         <p>Handling Game</p>
+        <hr/>
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-md-4 tall">
           {path}
           </div>
-          <div className="col-md-6">
-          
+          <div className="col-md-6 col-md-push-1 well-lg grey">
+            {error_display}
+            <br/>
+            {white_overview}
+            <hr/>
+            {black_overview}
           </div>
         </div>
       </div>
@@ -64,7 +154,7 @@ var GameBoard = React.createClass({
       for(var j = 0; j < board_state[0].length; j++){
         var tile = board_state[i][j];
         
-        board_row.push(<Tile color={tile.tile} piece={tile.piece} owner={tile.owner}/>)
+        board_row.push(<Tile tile={tile} onPlay={this.props.onPlay}/>)
       }
       board_display.push(<div className="board-row">{board_row}</div>);
     }
@@ -81,15 +171,33 @@ var GameBoard = React.createClass({
 
 
 var Tile = React.createClass({
+  play(){
+    this.props.onPlay(this.props.tile.y,this.props.tile.x);
+  },
   render() {
-    const color = this.props.color;
-    const piece = this.props.piece;
-    const piece_color = this.props.owner;
+    const tile = this.props.tile;
+    const color = tile.tile;
+    const piece = tile.piece;
+    const piece_color = tile.owner;
+    const highlight = tile.attack_able || tile.moveable || tile.selected;
     var divStyle = {
       background:"lightgrey"
     }
     if(color === "Black"){
-      divStyle.background = "darkgrey";
+      if(highlight){
+        divStyle.background = "darkslategrey";
+      }
+      else{
+        divStyle.background = "darkgrey";
+      }
+    }
+    else{
+      if(highlight){
+        divStyle.background = "slategrey";
+      }
+      else{
+        divStyle.background = "lightgrey";
+      }
     }
     
     var figure = "";
@@ -98,7 +206,7 @@ var Tile = React.createClass({
     }
     
     return (
-      <div style={divStyle} className="sqr">
+      <div style={divStyle} className="sqr" onClick={this.play}>
         <h2 className="piece">{figure}</h2>
       </div>
     );

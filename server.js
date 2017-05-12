@@ -498,7 +498,7 @@ app.put('/service/game/play', function (req, res) {
                         //gam.board_state[x][y].selected = true;
                         //gam.save();
                         Game.findOneAndUpdate({ _id : game_id }, gam, {upsert:false}, function(err, doc){
-                            if (err) return res.send(500, { error: err });
+                            if (err) return res.send(666, { error: err });
                             return res.send("succesfully saved");
                         });
                                                 

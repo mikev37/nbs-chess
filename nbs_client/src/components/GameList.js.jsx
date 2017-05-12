@@ -99,20 +99,20 @@ var GameShortCut = React.createClass({
         else if(game.black_player == null){
             bar = 
             <button className="btn btn-block" onClick={this.toGame}>
-                No White Player
+                No Black Player
                 <span className="pull-right glyphicon glyphicon-log-in"></span>
             </button>;
         }
         else if(game.white_player == null){
             bar = 
             <button className="btn btn-block" onClick={this.toGame}>
-                No Black Player
+                No White Player
                 <span className="pull-right glyphicon glyphicon-log-in"></span>
             </button>
         }
         else{
-          var white_taken = this.drawPieces(game.white_captured,"White");
-          var black_taken = this.drawPieces(game.black_captured,"Black");
+          var white_taken = this.drawPieces(game.black_captured,"White");
+          var black_taken = this.drawPieces(game.white_captured,"Black");
           var warning = "";
           
           if(game.check_black){
