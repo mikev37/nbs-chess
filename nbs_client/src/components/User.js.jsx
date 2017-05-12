@@ -11,12 +11,14 @@ var User = React.createClass({
     const user_name = usr_obj.email;
     return (
       <div className="row">
-            <div className = "col-md-3 col-md-pull-0">
+            <div className = "col-md-3 col-md-push-1">
             <h2>Email:{user_name}</h2>
-            <button>Change Password</button>
-            <button>Add Phone Number</button>
-            <button>Add Google Account</button>
-            <button>Add Steam Name</button>
+            <button className="btn btn-warning btn-block">Change Password</button>
+            <button className="btn btn-success btn-block">Add Phone Number</button>
+            <button className="btn btn-danger btn-block">Add Google Account</button>
+            <button className="btn btn-basic btn-block">Add Steam Name</button>
+            <button className="btn btn-primary btn-block">Add Facebook Account</button>
+            <button className="btn btn-info btn-block">Add Twitter Handle</button>
             <FacebookProvider appId="123456789">
               <Like href="http://www.facebook.com" colorScheme="dark" showFaces share />
             </FacebookProvider>
@@ -56,16 +58,7 @@ var GameShortCut = React.createClass({
     browserHistory.push('/game/'+this.props.id);
   },
   toOpen() {
-    this.setState({open:true});
-  },
-  joinGame(){
-    
-  },
-  joinGameBlack(){
-    
-  },
-  joinGameWhite(){
-    
+    this.setState({open:!this.state.open});
   },
   load(){
     var that = this;
@@ -124,21 +117,25 @@ var GameShortCut = React.createClass({
         
         if(game.black_player == null && game.white_player == null)
         {
-          bar = <div> Join:
-                <button type="button" className="btn">White</button>
-                <button type="button" className="btn">Random</button>
-                <button type="button" className="btn">Black</button>
-            </div>;
+          bar = 
+          <button className="btn btn-block" onClick={this.toGame}>
+            No Players have joined
+            <span className="pull-right glyphicon glyphicon-log-in"></span>
+          </button>
         }
         else if(game.black_player == null){
-            bar = <div> Join:
-                <button type="button" className="btn">Black</button>
-            </div>;
+            bar = 
+            <button className="btn btn-block" onClick={this.toGame}>
+                No White Player
+                <span className="pull-right glyphicon glyphicon-log-in"></span>
+            </button>;
         }
         else if(game.white_player == null){
-            bar = <div> Join:
-                <button type="button" className="btn">White</button>
-            </div>
+            bar = 
+            <button className="btn btn-block" onClick={this.toGame}>
+                No Black Player
+                <span className="pull-right glyphicon glyphicon-log-in"></span>
+            </button>
         }
         else{
           var white_taken = this.drawPieces(game.white_captured,"White");
@@ -162,23 +159,32 @@ var GameShortCut = React.createClass({
             }
           }
           
+          var taken = "Taken: ";
+          
+          if(white_taken.length === 0 && black_taken.length === 0 ){
+            taken = "";
+          }
+          
           bar = 
-          <div>
-            <button className="btn" onClick={this.toGame}>
-              Taken:{white_taken}{black_taken}
+            <button className="btn btn-block" onClick={this.toGame}>
+              {taken}{white_taken}{black_taken}
               {warning}
+              <span className="pull-right glyphicon glyphicon-log-in"></span>
             </button>
-          </div>;
         }
         display = 
           <div onClick={this.toOpen}>
+            <span className="pull-left glyphicon glyphicon-expand"></span>
             {game.name} : Turn {game.turn_num}
-            {bar}
+            <div>
+              {bar}
+            </div>
           </div>;
       }
       else{
       display = 
-      <div onClick={this.toOpen}>
+      <div  onClick={this.toOpen}>
+      <span className="pull-left glyphicon glyphicon-collapse-down"></span>
         {game.name} : Turn {game.turn_num}
       </div>;
       }

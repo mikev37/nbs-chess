@@ -30,6 +30,10 @@
 
 .sidebar {
   float: right;
+  padding-right: 10%;
+  margin-right: 12.5%;
+  padding-top: 25px;
+  margin-top: 5px;
 }
 
 @keyframes App-logo-spin {

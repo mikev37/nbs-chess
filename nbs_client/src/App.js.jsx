@@ -38,13 +38,18 @@ var Dashboard = React.createClass({
       <div className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+          <h2>NBS Chess</h2>
         </div>
-        <div className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-          <p><Link to="/">Home</Link></p>
-          <p><Link to={`/user`}>User</Link></p>
-          <p><Link to="/notexist">Not Exist</Link></p>
+        <div className="">
+          <nav className="navbar navbar-inverse">
+            <div className="navbar-header">
+              <Link className="navbar-brand" to={`/user`}>NBSChess</Link>
+            </div>
+            <ul className="nav navbar-nav">
+              <li><Link to="/">Create New Game</Link></li>
+              <li><Link to='/games'>Public Games</Link></li>
+            </ul>
+          </nav>
           {this.props.children}
 
         </div>
