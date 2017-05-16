@@ -25,7 +25,7 @@ var play =
             
             n_state = make_move(n_state,x,y);
             clear_board(n_state.is_white,n_state.board_state,n_state.selected);
-            if(n_state.error_message === "")
+            if(game_state.error_message === null || game_state.error_message === "")
                 end_turn(n_state);
         }
         else
@@ -244,10 +244,12 @@ var pawn_check = function(game_state,nx,ny){
     if(orgin_tile.piece === "Pawn" && orgin_tile.owner === "White" && tile.y === 7)
     {
         orgin_tile.piece = "Queen";
+        selected.piece = "Queen";
     }
     if(orgin_tile.piece === "Pawn" && orgin_tile.owner === "Black" && tile.y === 0)
     {
         orgin_tile.piece = "Queen";
+        selected.piece = "Queen";
     }
     
     return game_state;
@@ -300,7 +302,7 @@ var calc_threat = function(board_state){
             {
                 if(tile.piece === 'Pawn')
                 {
-                    if(tile.owner === 'Black')
+                    if(tile.owner === 'Black' && tile.y > 0)
                     {
                         if(tile.x > 0)
                         {
@@ -311,7 +313,7 @@ var calc_threat = function(board_state){
                                 board_state[tile.y-1][tile.x+1].threat_black++;
                         }
                     }
-                    else
+                    else if(tile.y < 7)
                     {
                         if(tile.x > 0)
                         {
