@@ -31,7 +31,28 @@ var App = React.createClass({
 
 
 var Dashboard = React.createClass({
-  
+  componentWillMount() {
+    var user = cookie.load('userId');
+    fetch("/service/user/get" , {
+	        method: 'POST',
+	        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+	        body: JSON.stringify({
+	          'user_email': user.email,
+	          'password':user.password
+	        })
+      })
+      .then(function(data){
+          return data.json();
+      })
+      .then(function(data){
+        if(data){
+          cookie.save('userId', data, { path: '/' });
+        }
+      })
+      .catch(function(err){
+        console.log('Send Error (.Y.)', err);  
+      })
+  },
   render: function() {
     const userId = this.props.userId;
     return (
@@ -46,7 +67,7 @@ var Dashboard = React.createClass({
               <Link className="navbar-brand" to={`/user`}>NBSChess</Link>
             </div>
             <ul className="nav navbar-nav">
-              <li><Link to="/">Create New Game</Link></li>
+              <li><Link to="/new/game">Create New Game</Link></li>
               <li><Link to='/games'>Public Games</Link></li>
             </ul>
           </nav>

@@ -246,7 +246,7 @@ var Tile = React.createClass({
       background:"lightgrey"
     }
     if(color === "Black"){
-      if(highlight){
+      if(!highlight){
         divStyle.background = "darkslategrey";
       }
       else{
@@ -254,7 +254,7 @@ var Tile = React.createClass({
       }
     }
     else{
-      if(highlight){
+      if(!highlight){
         divStyle.background = "slategrey";
       }
       else{
